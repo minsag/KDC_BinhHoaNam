@@ -9,16 +9,66 @@
 <style>
   body { margin: 0; padding: 0; }
   #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+
+  #layer-control {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+    background: rgba(255,255,255,0.94);
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    font: 13px/1.4 -apple-system, Segoe UI, Roboto, sans-serif;
+    max-height: calc(100vh - 20px);
+    overflow-y: auto;
+  }
+  #layer-control h4 {
+    margin: 0;
+    padding: 8px 12px;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+  }
+  #layer-control .layer-list {
+    padding: 6px 12px 8px;
+  }
+  #layer-control label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 0;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  #layer-control input {
+    margin: 0;
+  }
 </style>
 </head>
 <body>
 <div id="map"></div>
+<div id="layer-control">
+  <h4>Lớp bản đồ</h4>
+  <div class="layer-list" id="layer-list"></div>
+</div>
 <script>
 const ICONS = [
   ['cay_doc_lap', 'icons/cay_doc_lap@2x.png'],
   ['co_so_do_dac_DC', 'icons/co_so_do_dac_DC@2x.png'],
   ['co_so_do_dac_GPS', 'icons/co_so_do_dac_GPS@2x.png'],
   ['diem_do_cao', 'icons/diem_do_cao@2x.png']
+];
+
+// Nhom cac style-layer id theo tung lop du lieu goc (9 layer) de bat/tat dong thoi
+const LAYER_GROUPS = [
+  { label: 'Ranh khu đo',       layers: ['ranhKS-fill', 'ranhKS-line'] },
+  { label: 'Dân cư / nhà',      layers: ['dancu-fill', 'dancu-outline'] },
+  { label: 'Thủy văn',          layers: ['thuyvan-line'] },
+  { label: 'Mép đường',         layers: ['mepduong-line'] },
+  { label: 'Cầu giao thông',    layers: ['cau-casing', 'cau-fill'] },
+  { label: 'Đường bình độ',     layers: ['binhdo-default', 'binhdo-cobanban', 'binhdo-nuakhoang', 'binhdo-phu', 'binhdo-nhap'] },
+  { label: 'Cây độc lập',       layers: ['caydoclap-icon'] },
+  { label: 'Cơ sở đo đạc',      layers: ['codo-default', 'codo-dc', 'codo-gps'] },
+  { label: 'Điểm độ cao',       layers: ['diemdocao-icon', 'diemdocao-label'] }
 ];
 
 const map = new maplibregl.Map({
@@ -29,13 +79,35 @@ const map = new maplibregl.Map({
 });
 
 map.on('load', () => {
-  let loaded = 0;
   ICONS.forEach(([name, url]) => {
     map.loadImage(url, (err, image) => {
       if (err) { console.error('Khong load duoc icon', name, err); return; }
       if (!map.hasImage(name)) map.addImage(name, image, { pixelRatio: 2 });
-      loaded++;
     });
+  });
+
+  const listEl = document.getElementById('layer-list');
+  LAYER_GROUPS.forEach((group, i) => {
+    const id = 'layer-toggle-' + i;
+    const wrapper = document.createElement('label');
+    wrapper.setAttribute('for', id);
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.id = id;
+    checkbox.checked = true;
+    checkbox.addEventListener('change', () => {
+      const visibility = checkbox.checked ? 'visible' : 'none';
+      group.layers.forEach((layerId) => {
+        if (map.getLayer(layerId)) {
+          map.setLayoutProperty(layerId, 'visibility', visibility);
+        }
+      });
+    });
+
+    wrapper.appendChild(checkbox);
+    wrapper.appendChild(document.createTextNode(group.label));
+    listEl.appendChild(wrapper);
   });
 });
 
