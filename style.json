@@ -30,7 +30,7 @@
     },
     "googlesat": {
       "type": "raster",
-      "tiles": ["http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={col}&y={row}&z={level}"],
+      "tiles": ["https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}{key}"],
       "tileSize": 256,
       "attribution": "\u00a9 Google (endpoint noi bo, khong phai Maps Platform API chinh thuc - xem README muc Basemap ve rui ro ToS)"
     },
