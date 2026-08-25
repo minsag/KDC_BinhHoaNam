@@ -63,16 +63,19 @@ const ICONS = [
   ['diem_do_cao', 'icons/diem_do_cao@2x.png']
 ];
 
-// Ban do nen: chon 1 trong nhieu (radio), tat ca deu la nguon cong khai hop le
+// Ban do nen: chon 1 trong nhieu (radio), 3 lua chon dau la nguon cong khai hop le
 // (Esri basemap ToS cho phep dung trong web app voi attribution, khong can API
 // key; OpenStreetMap theo Tile Usage Policy - dung vua phai, co attribution).
-// KHONG dung tile Google noi bo (google.cn/maps/vt...) - vi pham ToS Google Maps,
-// da bo sau khi trao doi.
+// "Anh ve tinh (Google)" dung endpoint tile noi bo google.cn/maps/vt - KHONG phai
+// Maps Platform API chinh thuc, vi pham Dieu khoan dich vu Google Maps/Earth khi
+// dung ngoai trinh duyet Google Maps. Da trao doi va nguoi yeu cau CHAP NHAN RUI RO
+// nay them lan nua (2026-08-25). Mac dinh radio group van la "Khong nen".
 const BASEMAPS = [
   { id: 'none', label: 'Không nền', layers: [] },
   { id: 'esri-imagery', label: 'Ảnh vệ tinh (Esri)', layers: ['basemap-esri-imagery'] },
   { id: 'esri-topo', label: 'Địa hình (Esri Topo)', layers: ['basemap-esri-topo'] },
-  { id: 'osm', label: 'Bản đồ đường phố (OSM)', layers: ['basemap-osm'] }
+  { id: 'osm', label: 'Bản đồ đường phố (OSM)', layers: ['basemap-osm'] },
+  { id: 'google-sat', label: 'Ảnh vệ tinh (Google)', layers: ['basemap-google-sat'] }
 ];
 const ALL_BASEMAP_LAYERS = BASEMAPS.flatMap(b => b.layers);
 
