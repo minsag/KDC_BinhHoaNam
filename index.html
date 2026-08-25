@@ -24,12 +24,15 @@
   }
   #layer-control h4 {
     margin: 0;
-    padding: 8px 12px;
+    padding: 8px 12px 4px;
     font-size: 13px;
-    border-bottom: 1px solid rgba(0,0,0,0.1);
+  }
+  #layer-control h4.section-2 {
+    padding-top: 8px;
+    border-top: 1px solid rgba(0,0,0,0.1);
   }
   #layer-control .layer-list {
-    padding: 6px 12px 8px;
+    padding: 2px 12px 8px;
   }
   #layer-control label {
     display: flex;
@@ -47,7 +50,9 @@
 <body>
 <div id="map"></div>
 <div id="layer-control">
-  <h4>Lớp bản đồ</h4>
+  <h4>Bản đồ nền</h4>
+  <div class="layer-list" id="basemap-list"></div>
+  <h4 class="section-2">Lớp dữ liệu</h4>
   <div class="layer-list" id="layer-list"></div>
 </div>
 <script>
@@ -58,14 +63,21 @@ const ICONS = [
   ['diem_do_cao', 'icons/diem_do_cao@2x.png']
 ];
 
+// Ban do nen: chon 1 trong nhieu (radio), tat ca deu la nguon cong khai hop le
+// (Esri basemap ToS cho phep dung trong web app voi attribution, khong can API
+// key; OpenStreetMap theo Tile Usage Policy - dung vua phai, co attribution).
+// KHONG dung tile Google noi bo (google.cn/maps/vt...) - vi pham ToS Google Maps,
+// da bo sau khi trao doi.
+const BASEMAPS = [
+  { id: 'none', label: 'Không nền', layers: [] },
+  { id: 'esri-imagery', label: 'Ảnh vệ tinh (Esri)', layers: ['basemap-esri-imagery'] },
+  { id: 'esri-topo', label: 'Địa hình (Esri Topo)', layers: ['basemap-esri-topo'] },
+  { id: 'osm', label: 'Bản đồ đường phố (OSM)', layers: ['basemap-osm'] }
+];
+const ALL_BASEMAP_LAYERS = BASEMAPS.flatMap(b => b.layers);
+
 // Nhom cac style-layer id theo tung lop du lieu goc (9 layer) de bat/tat dong thoi
-// LUU Y: "Anh ve tinh (Google)" dung endpoint tile noi bo cua Google (khong phai
-// Maps Platform API chinh thuc, khong co API key) - vi pham Dieu khoan dich vu
-// Google Maps/Earth khi dung ngoai trinh duyet Google Maps. Da duoc yeu cau rieng
-// va CHAP NHAN RUI RO nay khi trien khai public tren GitHub Pages - mac dinh de
-// TAT (defaultOn: false) de khong tu dong tai ve moi luot xem trang.
 const LAYER_GROUPS = [
-  { label: 'Ảnh vệ tinh (Google)', layers: ['basemap-google-sat'], defaultOn: false },
   { label: 'Ranh khu đo',       layers: ['ranhKS-fill', 'ranhKS-line'] },
   { label: 'Dân cư / nhà',      layers: ['dancu-fill', 'dancu-outline'] },
   { label: 'Thủy văn',          layers: ['thuyvan-line'] },
@@ -92,6 +104,34 @@ map.on('load', () => {
     });
   });
 
+  // --- panel ban do nen (radio, chon 1) ---
+  const basemapListEl = document.getElementById('basemap-list');
+  BASEMAPS.forEach((basemap, i) => {
+    const id = 'basemap-toggle-' + i;
+    const wrapper = document.createElement('label');
+    wrapper.setAttribute('for', id);
+
+    const radio = document.createElement('input');
+    radio.type = 'radio';
+    radio.name = 'basemap';
+    radio.id = id;
+    radio.checked = basemap.id === 'none';
+    radio.addEventListener('change', () => {
+      if (!radio.checked) return;
+      ALL_BASEMAP_LAYERS.forEach((layerId) => {
+        if (map.getLayer(layerId)) {
+          const visible = basemap.layers.includes(layerId);
+          map.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
+        }
+      });
+    });
+
+    wrapper.appendChild(radio);
+    wrapper.appendChild(document.createTextNode(basemap.label));
+    basemapListEl.appendChild(wrapper);
+  });
+
+  // --- panel lop du lieu (checkbox, doc lap) ---
   const listEl = document.getElementById('layer-list');
   LAYER_GROUPS.forEach((group, i) => {
     const id = 'layer-toggle-' + i;
@@ -101,7 +141,7 @@ map.on('load', () => {
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.id = id;
-    checkbox.checked = group.defaultOn !== false;
+    checkbox.checked = true;
     checkbox.addEventListener('change', () => {
       const visibility = checkbox.checked ? 'visible' : 'none';
       group.layers.forEach((layerId) => {
@@ -114,14 +154,6 @@ map.on('load', () => {
     wrapper.appendChild(checkbox);
     wrapper.appendChild(document.createTextNode(group.label));
     listEl.appendChild(wrapper);
-
-    // gach ngan giua nhom nen anh va cac nhom du lieu vector
-    if (i === 0) {
-      const divider = document.createElement('div');
-      divider.style.borderBottom = '1px solid rgba(0,0,0,0.1)';
-      divider.style.margin = '4px 0';
-      listEl.appendChild(divider);
-    }
   });
 });
 
