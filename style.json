@@ -28,6 +28,12 @@
       "maxzoom": 19,
       "attribution": "\u00a9 OpenStreetMap contributors"
     },
+    "googlesat": {
+      "type": "raster",
+      "tiles": ["https://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}"],
+      "tileSize": 256,
+      "attribution": "\u00a9 Google (endpoint noi bo, khong phai Maps Platform API chinh thuc - xem README muc Basemap ve rui ro ToS)"
+    },
     "ranhKS": { "type": "geojson", "data": "data/ranhKS.geojson" },
     "codo": { "type": "geojson", "data": "data/CoSoDoDac_DiemDoDacQuocGia.geojson" },
     "cau": { "type": "geojson", "data": "data/GiaoThong_CauGiaoThong_Duong.geojson" },
@@ -48,6 +54,9 @@
       "layout": { "visibility": "none" },
       "paint": { "raster-opacity": 1 } },
     { "id": "basemap-osm", "type": "raster", "source": "osm-standard",
+      "layout": { "visibility": "none" },
+      "paint": { "raster-opacity": 1 } },
+    { "id": "basemap-google-sat", "type": "raster", "source": "googlesat",
       "layout": { "visibility": "none" },
       "paint": { "raster-opacity": 1 } },
 
