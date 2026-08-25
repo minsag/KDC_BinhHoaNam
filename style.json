@@ -71,7 +71,7 @@
     { "id": "caydoclap-icon", "type": "symbol", "source": "caydoclap",
       "layout": {
         "icon-image": "cay_doc_lap",
-        "icon-size": 0.35,
+        "icon-size": 0.6,
         "icon-allow-overlap": true
       } },
 
@@ -88,6 +88,7 @@
     { "id": "diemdocao-icon", "type": "symbol", "source": "diemdocao",
       "layout": { "icon-image": "diem_do_cao", "icon-size": 0.4, "icon-allow-overlap": true } },
     { "id": "diemdocao-label", "type": "symbol", "source": "diemdocao",
+      "minzoom": 18,
       "layout": {
         "text-field": ["get", "doCao"],
         "text-font": ["Open Sans Regular"],
