@@ -3,6 +3,12 @@
   "name": "huy_test - khoi phuc tu Map.mapx",
   "glyphs": "https://fonts.openmaptiles.org/{fontstack}/{range}.pbf",
   "sources": {
+    "googlesat": {
+      "type": "raster",
+      "tiles": ["https://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}"],
+      "tileSize": 256,
+      "attribution": "\u00a9 Google (endpoint noi bo, khong phai Maps Platform API chinh thuc - xem README muc Basemap)"
+    },
     "ranhKS": { "type": "geojson", "data": "data/ranhKS.geojson" },
     "codo": { "type": "geojson", "data": "data/CoSoDoDac_DiemDoDacQuocGia.geojson" },
     "cau": { "type": "geojson", "data": "data/GiaoThong_CauGiaoThong_Duong.geojson" },
@@ -15,6 +21,10 @@
   },
   "layers": [
     { "id": "background", "type": "background", "paint": { "background-color": "#ffffff" } },
+
+    { "id": "basemap-google-sat", "type": "raster", "source": "googlesat",
+      "layout": { "visibility": "none" },
+      "paint": { "raster-opacity": 1 } },
 
     { "id": "ranhKS-fill", "type": "fill", "source": "ranhKS",
       "paint": { "fill-color": "#828282", "fill-opacity": 0 } },
