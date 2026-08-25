@@ -59,7 +59,13 @@ const ICONS = [
 ];
 
 // Nhom cac style-layer id theo tung lop du lieu goc (9 layer) de bat/tat dong thoi
+// LUU Y: "Anh ve tinh (Google)" dung endpoint tile noi bo cua Google (khong phai
+// Maps Platform API chinh thuc, khong co API key) - vi pham Dieu khoan dich vu
+// Google Maps/Earth khi dung ngoai trinh duyet Google Maps. Da duoc yeu cau rieng
+// va CHAP NHAN RUI RO nay khi trien khai public tren GitHub Pages - mac dinh de
+// TAT (defaultOn: false) de khong tu dong tai ve moi luot xem trang.
 const LAYER_GROUPS = [
+  { label: 'Ảnh vệ tinh (Google)', layers: ['basemap-google-sat'], defaultOn: false },
   { label: 'Ranh khu đo',       layers: ['ranhKS-fill', 'ranhKS-line'] },
   { label: 'Dân cư / nhà',      layers: ['dancu-fill', 'dancu-outline'] },
   { label: 'Thủy văn',          layers: ['thuyvan-line'] },
@@ -95,7 +101,7 @@ map.on('load', () => {
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.id = id;
-    checkbox.checked = true;
+    checkbox.checked = group.defaultOn !== false;
     checkbox.addEventListener('change', () => {
       const visibility = checkbox.checked ? 'visible' : 'none';
       group.layers.forEach((layerId) => {
@@ -108,10 +114,19 @@ map.on('load', () => {
     wrapper.appendChild(checkbox);
     wrapper.appendChild(document.createTextNode(group.label));
     listEl.appendChild(wrapper);
+
+    // gach ngan giua nhom nen anh va cac nhom du lieu vector
+    if (i === 0) {
+      const divider = document.createElement('div');
+      divider.style.borderBottom = '1px solid rgba(0,0,0,0.1)';
+      divider.style.margin = '4px 0';
+      listEl.appendChild(divider);
+    }
   });
 });
 
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
 </script>
 </body>
 </html>
