@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<title>huy_test - WebGIS</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/3.6.2/maplibre-gl.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/3.6.2/maplibre-gl.css" rel="stylesheet" />
+<style>
+  body { margin: 0; padding: 0; }
+  #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+const ICONS = [
+  ['cay_doc_lap', 'icons/cay_doc_lap@2x.png'],
+  ['co_so_do_dac_DC', 'icons/co_so_do_dac_DC@2x.png'],
+  ['co_so_do_dac_GPS', 'icons/co_so_do_dac_GPS@2x.png'],
+  ['diem_do_cao', 'icons/diem_do_cao@2x.png']
+];
+
+const map = new maplibregl.Map({
+  container: 'map',
+  style: 'style.json',
+  center: [106.3504, 10.7874], // centroid bbox du lieu thuc te (Long An)
+  zoom: 15
+});
+
+map.on('load', () => {
+  let loaded = 0;
+  ICONS.forEach(([name, url]) => {
+    map.loadImage(url, (err, image) => {
+      if (err) { console.error('Khong load duoc icon', name, err); return; }
+      if (!map.hasImage(name)) map.addImage(name, image, { pixelRatio: 2 });
+      loaded++;
+    });
+  });
+});
+
+map.addControl(new maplibregl.NavigationControl());
+</script>
+</body>
+</html>

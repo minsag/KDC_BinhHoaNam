@@ -1,0 +1,102 @@
+{
+  "version": 8,
+  "name": "huy_test - khoi phuc tu Map.mapx",
+  "glyphs": "https://fonts.openmaptiles.org/{fontstack}/{range}.pbf",
+  "sources": {
+    "ranhKS": { "type": "geojson", "data": "data/ranhKS.geojson" },
+    "codo": { "type": "geojson", "data": "data/CoSoDoDac_DiemDoDacQuocGia.geojson" },
+    "cau": { "type": "geojson", "data": "data/GiaoThong_CauGiaoThong_Duong.geojson" },
+    "diemdocao": { "type": "geojson", "data": "data/DiaHinh_DiemDoCao.geojson" },
+    "thuyvan": { "type": "geojson", "data": "data/ThuyVan_DuongBoNuoc.geojson" },
+    "mepduong": { "type": "geojson", "data": "data/GiaoThong_MepDuong.geojson" },
+    "dancu": { "type": "geojson", "data": "data/DanCu_Nha_Vung.geojson" },
+    "caydoclap": { "type": "geojson", "data": "data/PhuBeMat_CayDocLap.geojson" },
+    "binhdo": { "type": "geojson", "data": "data/DiaHinh_DuongBinhDo.geojson" }
+  },
+  "layers": [
+    { "id": "background", "type": "background", "paint": { "background-color": "#ffffff" } },
+
+    { "id": "ranhKS-fill", "type": "fill", "source": "ranhKS",
+      "paint": { "fill-color": "#828282", "fill-opacity": 0 } },
+    { "id": "ranhKS-line", "type": "line", "source": "ranhKS",
+      "paint": {
+        "line-color": "#FF0000",
+        "line-width": 2,
+        "line-dasharray": [12, 12]
+      } },
+
+    { "id": "dancu-fill", "type": "fill", "source": "dancu",
+      "paint": { "fill-color": "#F3EDD3" } },
+    { "id": "dancu-outline", "type": "line", "source": "dancu",
+      "paint": { "line-color": "#E0D2B8", "line-width": 0.6 } },
+
+    { "id": "thuyvan-line", "type": "line", "source": "thuyvan",
+      "layout": { "line-cap": "round" },
+      "paint": { "line-color": "#9EBBD7", "line-width": 1 } },
+
+    { "id": "mepduong-line", "type": "line", "source": "mepduong",
+      "paint": { "line-color": "#BDBDC5", "line-width": 1 } },
+
+    { "id": "cau-casing", "type": "line", "source": "cau",
+      "layout": { "line-cap": "round" },
+      "paint": { "line-color": "#B9B7B9", "line-width": 2.8 } },
+    { "id": "cau-fill", "type": "line", "source": "cau",
+      "layout": { "line-cap": "round" },
+      "paint": { "line-color": "#FFFFFF", "line-width": 1.3 } },
+
+    { "id": "binhdo-default", "type": "line", "source": "binhdo",
+      "filter": ["!", ["in", ["get", "loaiDuongBinhDo"], ["literal", [1,2,3,4]]]],
+      "paint": { "line-color": "#828282", "line-width": 1 } },
+    { "id": "binhdo-cobanban", "type": "line", "source": "binhdo",
+      "filter": ["==", ["get", "loaiDuongBinhDo"], 1],
+      "layout": { "line-cap": "butt", "line-join": "round" },
+      "paint": { "line-color": "#E69800", "line-width": 1.2 } },
+    { "id": "binhdo-nuakhoang", "type": "line", "source": "binhdo",
+      "filter": ["==", ["get", "loaiDuongBinhDo"], 2],
+      "layout": { "line-cap": "round", "line-join": "round" },
+      "paint": { "line-color": "#BAFDB5", "line-width": 1 } },
+    { "id": "binhdo-phu", "type": "line", "source": "binhdo",
+      "filter": ["==", ["get", "loaiDuongBinhDo"], 3],
+      "layout": { "line-cap": "butt", "line-join": "round" },
+      "paint": { "line-color": "#FFD37F", "line-width": 0.4 } },
+    { "id": "binhdo-nhap", "type": "line", "source": "binhdo",
+      "filter": ["==", ["get", "loaiDuongBinhDo"], 4],
+      "layout": { "line-cap": "butt", "line-join": "round" },
+      "paint": {
+        "line-color": "#CCEDFF",
+        "line-width": 0.4,
+        "line-dasharray": [7, 1, 3, 1]
+      } },
+
+    { "id": "caydoclap-icon", "type": "symbol", "source": "caydoclap",
+      "layout": {
+        "icon-image": "cay_doc_lap",
+        "icon-size": 0.35,
+        "icon-allow-overlap": true
+      } },
+
+    { "id": "codo-default", "type": "circle", "source": "codo",
+      "filter": ["!", ["in", ["get", "maNhanDang"], ["literal", ["DC","GPS"]]]],
+      "paint": { "circle-color": "#828282", "circle-stroke-color": "#000000", "circle-stroke-width": 0.7, "circle-radius": 4 } },
+    { "id": "codo-dc", "type": "symbol", "source": "codo",
+      "filter": ["==", ["get", "maNhanDang"], "DC"],
+      "layout": { "icon-image": "co_so_do_dac_DC", "icon-size": 0.5, "icon-allow-overlap": true } },
+    { "id": "codo-gps", "type": "symbol", "source": "codo",
+      "filter": ["==", ["get", "maNhanDang"], "GPS"],
+      "layout": { "icon-image": "co_so_do_dac_GPS", "icon-size": 0.5, "icon-allow-overlap": true } },
+
+    { "id": "diemdocao-icon", "type": "symbol", "source": "diemdocao",
+      "layout": { "icon-image": "diem_do_cao", "icon-size": 0.4, "icon-allow-overlap": true } },
+    { "id": "diemdocao-label", "type": "symbol", "source": "diemdocao",
+      "layout": {
+        "text-field": ["get", "doCao"],
+        "text-font": ["Open Sans Regular"],
+        "text-size": 10,
+        "text-offset": [0, 0.8],
+        "text-anchor": "top",
+        "text-allow-overlap": true,
+        "text-ignore-placement": true
+      },
+      "paint": { "text-color": "#000000", "text-halo-color": "#ffffff", "text-halo-width": 1.2 } }
+  ]
+}
