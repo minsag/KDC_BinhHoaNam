@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8" />
-<title>huy_test - WebGIS</title>
+<title>KDC Bình Hòa Nam - WebGIS (3 khu)</title>
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
 <script src="vendor/maplibre-gl/maplibre-gl.js"></script>
 <link href="vendor/maplibre-gl/maplibre-gl.css" rel="stylesheet" />
@@ -21,6 +21,7 @@
     font: 13px/1.4 -apple-system, Segoe UI, Roboto, sans-serif;
     max-height: calc(100vh - 20px);
     overflow-y: auto;
+    width: 220px;
   }
   #layer-control h4 {
     margin: 0;
@@ -45,6 +46,29 @@
   #layer-control input {
     margin: 0;
   }
+
+  #area-tabs {
+    display: flex;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+  }
+  #area-tabs button {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 8px 4px;
+    font: 13px/1.2 -apple-system, Segoe UI, Roboto, sans-serif;
+    cursor: pointer;
+    color: #555;
+    border-bottom: 2px solid transparent;
+  }
+  #area-tabs button.active {
+    color: #1a73e8;
+    border-bottom: 2px solid #1a73e8;
+    font-weight: 600;
+  }
+  .area-panel { display: none; }
+  .area-panel.active { display: block; }
 </style>
 </head>
 <body>
@@ -52,22 +76,25 @@
 <div id="layer-control">
   <h4>Bản đồ nền</h4>
   <div class="layer-list" id="basemap-list"></div>
-  <h4 class="section-2">Lớp dữ liệu</h4>
-  <div class="layer-list" id="layer-list"></div>
+
+  <h4 class="section-2">Khu vực / Lớp dữ liệu</h4>
+  <div id="area-tabs"></div>
+  <div id="area-panels"></div>
 </div>
 <script>
 const ICONS = [
   ['cay_doc_lap', 'icons/cay_doc_lap@2x.png'],
   ['co_so_do_dac_DC', 'icons/co_so_do_dac_DC@2x.png'],
   ['co_so_do_dac_GPS', 'icons/co_so_do_dac_GPS@2x.png'],
-  ['diem_do_cao', 'icons/diem_do_cao@2x.png']
+  ['diem_do_cao', 'icons/diem_do_cao@2x.png'],
+  ['moc_ranh_ks', 'icons/moc_ranh_ks@2x.png'],
+  ['bien_bao_giao_thong', 'icons/bien_bao_giao_thong@2x.png'],
+  ['dan_cu_cot_dien', 'icons/dan_cu_cot_dien@2x.png']
 ];
 
-// Ban do nen: chon 1 trong nhieu (radio), ca 3 lua chon deu la nguon cong khai
-// hop le, render qua raster source chuan cua MapLibre (WebGL, cung 1 engine
-// voi lop vector - khong con basemap Google/Leaflet hybrid nua, da bo hoan
-// toan sau nhieu lan gap loi dong bo giua 2 engine rieng biet + rui ro ToS
-// khong dang danh doi cho 1 nen phu (2026-08-26)).
+// Ban do nen: chon 1 trong nhieu (radio), render qua raster source chuan cua
+// MapLibre (cung 1 engine WebGL voi lop vector - khong con basemap
+// Google/Leaflet hybrid nua, da bo hoan toan 2026-08-26).
 const BASEMAPS = [
   { id: 'none', label: 'Không nền', layers: [] },
   { id: 'esri-imagery', label: 'Ảnh vệ tinh (Esri)', layers: ['basemap-esri-imagery'] },
@@ -76,18 +103,268 @@ const BASEMAPS = [
 ];
 const ALL_BASEMAP_LAYERS = BASEMAPS.flatMap(b => b.layers);
 
-// Nhom cac style-layer id theo tung lop du lieu goc (9 layer) de bat/tat dong thoi
-const LAYER_GROUPS = [
-  { label: 'Ranh khu đo',       layers: ['ranhKS-fill', 'ranhKS-line'] },
-  { label: 'Dân cư / nhà',      layers: ['dancu-fill', 'dancu-outline'] },
-  { label: 'Thủy văn',          layers: ['thuyvan-line'] },
-  { label: 'Mép đường',         layers: ['mepduong-line'] },
-  { label: 'Cầu giao thông',    layers: ['cau-casing', 'cau-fill'] },
-  { label: 'Đường bình độ',     layers: ['binhdo-default', 'binhdo-cobanban', 'binhdo-nuakhoang', 'binhdo-phu', 'binhdo-nhap'] },
-  { label: 'Cây độc lập',       layers: ['caydoclap-icon'] },
-  { label: 'Cơ sở đo đạc',      layers: ['codo-default', 'codo-dc', 'codo-gps'] },
-  { label: 'Điểm độ cao',       layers: ['diemdocao-icon', 'diemdocao-label'] }
-];
+// Nhan khu vuc hien thi tren tab
+const AREA_LABELS = {"140": "Khu 140", "160": "Khu 160", "166": "Khu 166"};
+
+// Nhom cac style-layer id theo tung khu (140/160/166) va tung loai lop du
+// lieu, sinh tu KDC_BinhHoaNam.mapx + doi chieu voi cau truc file trong
+// data/ (2026-08-26). Moi khu chi liet ke cac loai lop thuc su co du lieu
+// cho khu do (vd. khu 160/166 khong co "cau"/9 loai lop moi vi file .mapx
+// khong co lop tuong ung).
+const AREA_LAYER_GROUPS = {
+  "140": [
+    {
+      "label": "Ranh khu đo",
+      "layers": [
+        "140-ranhKS-fill",
+        "140-ranhKS-line"
+      ]
+    },
+    {
+      "label": "Dân cư / nhà",
+      "layers": [
+        "140-dancu-fill",
+        "140-dancu-outline"
+      ]
+    },
+    {
+      "label": "Thủy văn (đường bờ nước)",
+      "layers": [
+        "140-thuyvan-line"
+      ]
+    },
+    {
+      "label": "Mép đường",
+      "layers": [
+        "140-mepduong-line"
+      ]
+    },
+    {
+      "label": "Cầu giao thông",
+      "layers": [
+        "140-cau-casing",
+        "140-cau-fill"
+      ]
+    },
+    {
+      "label": "Đường bình độ",
+      "layers": [
+        "140-binhdo-default",
+        "140-binhdo-cobanban",
+        "140-binhdo-nuakhoang",
+        "140-binhdo-phu",
+        "140-binhdo-nhap"
+      ]
+    },
+    {
+      "label": "Cây độc lập",
+      "layers": [
+        "140-caydoclap-icon"
+      ]
+    },
+    {
+      "label": "Cơ sở đo đạc",
+      "layers": [
+        "140-codo-default",
+        "140-codo-dc",
+        "140-codo-gps"
+      ]
+    },
+    {
+      "label": "Điểm độ cao",
+      "layers": [
+        "140-diemdocao-icon",
+        "140-diemdocao-label"
+      ]
+    },
+    {
+      "label": "Mốc ranh khảo sát",
+      "layers": [
+        "140-mocranhKS-icon"
+      ]
+    },
+    {
+      "label": "Biển báo giao thông",
+      "layers": [
+        "140-Bienbaogiaothong-icon"
+      ]
+    },
+    {
+      "label": "Bờ kè bờ cạp",
+      "layers": [
+        "140-ThuyVan_BoKeBoCap-line"
+      ]
+    },
+    {
+      "label": "Đường dây tải điện",
+      "layers": [
+        "140-DanCu_DuongDayTaiDien-line"
+      ]
+    },
+    {
+      "label": "Cột điện",
+      "layers": [
+        "140-DanCu_CotDien-icon"
+      ]
+    },
+    {
+      "label": "Hố ga thoát nước",
+      "layers": [
+        "140-hogathoatnuoc-fill",
+        "140-hogathoatnuoc-outline"
+      ]
+    },
+    {
+      "label": "Cây lâu năm (phủ bề mặt)",
+      "layers": [
+        "140-PhuBeMat_CayLauNam-fill"
+      ]
+    },
+    {
+      "label": "Bồn hoa",
+      "layers": [
+        "140-bonhoa-fill"
+      ]
+    },
+    {
+      "label": "Mặt nước tĩnh",
+      "layers": [
+        "140-matnuoctinh-fill"
+      ]
+    }
+  ],
+  "160": [
+    {
+      "label": "Ranh khu đo",
+      "layers": [
+        "160-ranhKS-fill",
+        "160-ranhKS-line"
+      ]
+    },
+    {
+      "label": "Dân cư / nhà",
+      "layers": [
+        "160-dancu-fill",
+        "160-dancu-outline"
+      ]
+    },
+    {
+      "label": "Thủy văn (đường bờ nước)",
+      "layers": [
+        "160-thuyvan-line"
+      ]
+    },
+    {
+      "label": "Mép đường",
+      "layers": [
+        "160-mepduong-line"
+      ]
+    },
+    {
+      "label": "Đường bình độ",
+      "layers": [
+        "160-binhdo-default",
+        "160-binhdo-cobanban",
+        "160-binhdo-nuakhoang",
+        "160-binhdo-phu",
+        "160-binhdo-nhap"
+      ]
+    },
+    {
+      "label": "Cây độc lập",
+      "layers": [
+        "160-caydoclap-icon"
+      ]
+    },
+    {
+      "label": "Cơ sở đo đạc",
+      "layers": [
+        "160-codo-default",
+        "160-codo-dc",
+        "160-codo-gps"
+      ]
+    },
+    {
+      "label": "Điểm độ cao",
+      "layers": [
+        "160-diemdocao-icon",
+        "160-diemdocao-label"
+      ]
+    },
+    {
+      "label": "Mặt nước tĩnh",
+      "layers": [
+        "160-matnuoctinh-fill"
+      ]
+    }
+  ],
+  "166": [
+    {
+      "label": "Ranh khu đo",
+      "layers": [
+        "166-ranhKS-fill",
+        "166-ranhKS-line"
+      ]
+    },
+    {
+      "label": "Dân cư / nhà",
+      "layers": [
+        "166-dancu-fill",
+        "166-dancu-outline"
+      ]
+    },
+    {
+      "label": "Thủy văn (đường bờ nước)",
+      "layers": [
+        "166-thuyvan-line"
+      ]
+    },
+    {
+      "label": "Mép đường",
+      "layers": [
+        "166-mepduong-line"
+      ]
+    },
+    {
+      "label": "Cầu giao thông",
+      "layers": [
+        "166-cau-casing",
+        "166-cau-fill"
+      ]
+    },
+    {
+      "label": "Đường bình độ",
+      "layers": [
+        "166-binhdo-default",
+        "166-binhdo-cobanban",
+        "166-binhdo-nuakhoang",
+        "166-binhdo-phu",
+        "166-binhdo-nhap"
+      ]
+    },
+    {
+      "label": "Cây độc lập",
+      "layers": [
+        "166-caydoclap-icon"
+      ]
+    },
+    {
+      "label": "Cơ sở đo đạc",
+      "layers": [
+        "166-codo-default",
+        "166-codo-dc",
+        "166-codo-gps"
+      ]
+    },
+    {
+      "label": "Điểm độ cao",
+      "layers": [
+        "166-diemdocao-icon",
+        "166-diemdocao-label"
+      ]
+    }
+  ]
+};
 
 const map = new maplibregl.Map({
   container: 'map',
@@ -95,9 +372,8 @@ const map = new maplibregl.Map({
   center: [106.3504, 10.7874], // centroid bbox du lieu thuc te (Long An)
   zoom: 15,
   // Cho phep zoom sau de soi chi tiet du lieu do dac (den 21), nhung nguon
-  // raster Esri chi khai bao maxzoom:18 trong style.json (xem ghi chu o do) -
-  // MapLibre se tu dong "overzoom" (phong to tile o muc 18 thay vi xin tile
-  // moi khong ton tai) khi vuot qua, thay vi hien khoang trong/loi.
+  // raster Esri chi khai bao maxzoom:18 trong style.json - MapLibre se tu
+  // dong "overzoom" khi vuot qua, thay vi hien khoang trong/loi.
   maxZoom: 21,
   dragRotate: false,
   pitchWithRotate: false,
@@ -112,7 +388,7 @@ map.on('load', () => {
     });
   });
 
-  // --- panel ban do nen (radio, chon 1) ---
+  // --- panel ban do nen (radio, chon 1, dung chung cho ca 3 khu) ---
   const basemapListEl = document.getElementById('basemap-list');
   BASEMAPS.forEach((basemap, i) => {
     const id = 'basemap-toggle-' + i;
@@ -139,29 +415,59 @@ map.on('load', () => {
     basemapListEl.appendChild(wrapper);
   });
 
-  // --- panel lop du lieu (checkbox, doc lap) ---
-  const listEl = document.getElementById('layer-list');
-  LAYER_GROUPS.forEach((group, i) => {
-    const id = 'layer-toggle-' + i;
-    const wrapper = document.createElement('label');
-    wrapper.setAttribute('for', id);
+  // --- tab 3 khu, moi tab co danh sach checkbox lop rieng, doc lap nhau ---
+  const areaIds = Object.keys(AREA_LAYER_GROUPS);
+  const tabsEl = document.getElementById('area-tabs');
+  const panelsEl = document.getElementById('area-panels');
 
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.id = id;
-    checkbox.checked = true;
-    checkbox.addEventListener('change', () => {
-      const visibility = checkbox.checked ? 'visible' : 'none';
-      group.layers.forEach((layerId) => {
-        if (map.getLayer(layerId)) {
-          map.setLayoutProperty(layerId, 'visibility', visibility);
-        }
+  areaIds.forEach((areaId, idx) => {
+    const btn = document.createElement('button');
+    btn.textContent = AREA_LABELS[areaId] || areaId;
+    btn.className = idx === 0 ? 'active' : '';
+    btn.addEventListener('click', () => {
+      tabsEl.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      panelsEl.querySelectorAll('.area-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('area-panel-' + areaId).classList.add('active');
+    });
+    tabsEl.appendChild(btn);
+
+    const panel = document.createElement('div');
+    panel.className = 'area-panel' + (idx === 0 ? ' active' : '');
+    panel.id = 'area-panel-' + areaId;
+    panel.setAttribute('data-area', areaId);
+
+    const listEl = document.createElement('div');
+    listEl.className = 'layer-list';
+
+    AREA_LAYER_GROUPS[areaId].forEach((group, i) => {
+      const id = 'layer-toggle-' + areaId + '-' + i;
+      const wrapper = document.createElement('label');
+      wrapper.setAttribute('for', id);
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.id = id;
+      checkbox.checked = true;
+      // Bat/tat chi anh huong cac style-layer cua RIENG khu nay - moi khu co
+      // mot bo layer id rieng (vd "140-ranhKS-line" vs "160-ranhKS-line")
+      // nen khong bao gio dung cham sang khu khac.
+      checkbox.addEventListener('change', () => {
+        const visibility = checkbox.checked ? 'visible' : 'none';
+        group.layers.forEach((layerId) => {
+          if (map.getLayer(layerId)) {
+            map.setLayoutProperty(layerId, 'visibility', visibility);
+          }
+        });
       });
+
+      wrapper.appendChild(checkbox);
+      wrapper.appendChild(document.createTextNode(group.label));
+      listEl.appendChild(wrapper);
     });
 
-    wrapper.appendChild(checkbox);
-    wrapper.appendChild(document.createTextNode(group.label));
-    listEl.appendChild(wrapper);
+    panel.appendChild(listEl);
+    panelsEl.appendChild(panel);
   });
 });
 
