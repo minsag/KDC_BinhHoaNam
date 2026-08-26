@@ -6,48 +6,15 @@
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
 <script src="vendor/maplibre-gl/maplibre-gl.js"></script>
 <link href="vendor/maplibre-gl/maplibre-gl.css" rel="stylesheet" />
-<script src="vendor/leaflet/leaflet.js"></script>
-<link href="vendor/leaflet/leaflet.css" rel="stylesheet" />
 <style>
   body { margin: 0; padding: 0; }
-
-  /* Lop nen DOM (Leaflet) - chi dung cho basemap Google, nam DUOI canvas MapLibre.
-     Tile load qua the <img> thuong nen khong bi WebGL CORS/taint-check chan,
-     nhung cung vi vay khong dung chung co che raster-source cua style.json. */
-  #leaflet-base {
-    position: absolute;
-    top: 0; bottom: 0; left: 0; right: 0;
-    width: 100%; height: 100%;
-    z-index: 0;
-    display: none;
-    pointer-events: none;
-  }
-  #map {
-    position: absolute;
-    top: 0; bottom: 0; width: 100%; height: 100%;
-    z-index: 1;
-    background: transparent;
-  }
-
-  #google-attrib {
-    position: absolute;
-    bottom: 2px;
-    right: 4px;
-    z-index: 2;
-    display: none;
-    font: 10px/1.3 -apple-system, Segoe UI, Roboto, sans-serif;
-    background: rgba(255,255,255,0.75);
-    padding: 2px 6px;
-    border-radius: 3px;
-    color: #333;
-    pointer-events: none;
-  }
+  #map { position: absolute; top: 0; bottom: 0; width: 100%; }
 
   #layer-control {
     position: absolute;
     top: 10px;
     left: 10px;
-    z-index: 3;
+    z-index: 1;
     background: rgba(255,255,255,0.94);
     border-radius: 4px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.3);
@@ -81,9 +48,7 @@
 </style>
 </head>
 <body>
-<div id="leaflet-base"></div>
 <div id="map"></div>
-<div id="google-attrib">© Google — endpoint nội bộ google.cn, không phải Maps Platform API chính thức, có thể ngừng hoạt động bất kỳ lúc nào</div>
 <div id="layer-control">
   <h4>Bản đồ nền</h4>
   <div class="layer-list" id="basemap-list"></div>
@@ -98,24 +63,16 @@ const ICONS = [
   ['diem_do_cao', 'icons/diem_do_cao@2x.png']
 ];
 
-// Ban do nen: chon 1 trong nhieu (radio).
-// - esri-imagery / esri-topo / osm: nguon cong khai hop le, render qua raster
-//   source chuan cua MapLibre (WebGL texture, can CORS - ca 3 deu co).
-// - google-sat: dung endpoint noi bo google.cn/maps/vt, KHONG co header CORS
-//   nen khong the load qua raster source WebGL binh thuong (bi chan boi chinh
-//   trinh duyet, khong phai loi cau hinh). Giai phap: tai qua Leaflet (the
-//   <img> DOM, khong bi WebGL taint-check) chay o mot lop rieng ben duoi
-//   canvas MapLibre, dong bo pan/zoom bang tay - xem syncLeafletBase().
-//   Van la endpoint khong chinh thuc, vi pham Dieu khoan dich vu Google
-//   Maps/Earth khi dung ngoai trinh duyet Google Maps. Nguoi yeu cau da
-//   duoc canh bao va CHAP NHAN RUI RO nay (2026-08-25) - hieu ro co the bi
-//   Google chan/doi endpoint bat cu luc nao khong bao truoc.
+// Ban do nen: chon 1 trong nhieu (radio), ca 3 lua chon deu la nguon cong khai
+// hop le, render qua raster source chuan cua MapLibre (WebGL, cung 1 engine
+// voi lop vector - khong con basemap Google/Leaflet hybrid nua, da bo hoan
+// toan sau nhieu lan gap loi dong bo giua 2 engine rieng biet + rui ro ToS
+// khong dang danh doi cho 1 nen phu (2026-08-26)).
 const BASEMAPS = [
   { id: 'none', label: 'Không nền', layers: [] },
   { id: 'esri-imagery', label: 'Ảnh vệ tinh (Esri)', layers: ['basemap-esri-imagery'] },
   { id: 'esri-topo', label: 'Địa hình (Esri Topo)', layers: ['basemap-esri-topo'] },
-  { id: 'osm', label: 'Bản đồ đường phố (OSM)', layers: ['basemap-osm'] },
-  { id: 'google-sat', label: 'Ảnh vệ tinh (Google, không chính thức)', layers: [], dom: 'google' }
+  { id: 'osm', label: 'Bản đồ đường phố (OSM)', layers: ['basemap-osm'] }
 ];
 const ALL_BASEMAP_LAYERS = BASEMAPS.flatMap(b => b.layers);
 
@@ -132,137 +89,20 @@ const LAYER_GROUPS = [
   { label: 'Điểm độ cao',       layers: ['diemdocao-icon', 'diemdocao-label'] }
 ];
 
-const INITIAL_CENTER = [106.3504, 10.7874]; // centroid bbox du lieu thuc te (Long An)
-const INITIAL_ZOOM = 15;
-
 const map = new maplibregl.Map({
   container: 'map',
   style: 'style.json',
-  center: INITIAL_CENTER,
-  zoom: INITIAL_ZOOM,
-  // Tat rotate/pitch: ban do dia chinh 2D, khong can xoay/nghieng, va Leaflet
-  // (lop DOM cho basemap Google) khong ho tro rotate nen neu cho phep xoay
-  // se lam 2 lop lech nhau.
+  center: [106.3504, 10.7874], // centroid bbox du lieu thuc te (Long An)
+  zoom: 15,
+  // Cho phep zoom sau de soi chi tiet du lieu do dac (den 21), nhung nguon
+  // raster Esri chi khai bao maxzoom:18 trong style.json (xem ghi chu o do) -
+  // MapLibre se tu dong "overzoom" (phong to tile o muc 18 thay vi xin tile
+  // moi khong ton tai) khi vuot qua, thay vi hien khoang trong/loi.
+  maxZoom: 21,
   dragRotate: false,
   pitchWithRotate: false,
   touchPitch: false
 });
-
-// --- lop DOM (Leaflet) cho basemap Google, chi khoi tao/dieu khien khi can ---
-const leafletBase = L.map('leaflet-base', {
-  zoomControl: false,
-  attributionControl: false,
-  dragging: false,
-  touchZoom: false,
-  scrollWheelZoom: false,
-  doubleClickZoom: false,
-  boxZoom: false,
-  keyboard: false,
-  tap: false,
-  zoomSnap: 0,
-  zoomAnimation: false,
-  fadeAnimation: false,
-  inertia: false
-}).setView([INITIAL_CENTER[1], INITIAL_CENTER[0]], INITIAL_ZOOM);
-
-const googleTileLayer = L.tileLayer(
-  'https://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}',
-  {
-    tileSize: 256,
-    maxZoom: 20,
-    attribution: '© Google',
-    keepBuffer: 4,       // giu them tile ngoai vien man hinh, do "hut" khi hard-sync nhay vi tri
-    updateWhenZooming: false
-  }
-);
-
-// --- dong bo Leaflet theo MapLibre, 2 tang: mem (transform CSS) + cung (setView that) ---
-// Goi setView() moi frame trong luc keo/zoom qua nang (Leaflet phai tinh lai layout,
-// tile list...) nen bi tre so voi canvas WebGL cua MapLibre -> cam giac nen anh
-// "troi/lech" so voi lop vector ben tren trong luc di chuyen. Cach xu ly: trong luc
-// dang keo/zoom (su kien 'move', ban ve moi animation frame) CHI ap transform CSS
-// (translate + scale) len pane cua Leaflet - thao tac GPU re, khop tuc thi voi
-// MapLibre. Khi dung han (su kien 'moveend') moi goi setView() that de Leaflet nap
-// dung tile cho vi tri/zoom moi va reset transform ve identity. Khong can tinh
-// bearing/rotate vi da tat dragRotate tren MapLibre (ban do 2D, khong xoay).
-function projectPixel(lng, lat, zoom) {
-  const scale = 256 * Math.pow(2, zoom);
-  const sinLat = Math.sin(lat * Math.PI / 180);
-  const x = (lng + 180) / 360 * scale;
-  const y = (0.5 - Math.log((1 + sinLat) / (1 - sinLat)) / (4 * Math.PI)) * scale;
-  return { x, y };
-}
-
-let leafletRefCenter = null;
-let leafletRefZoom = null;
-let leafletSyncActive = false;
-
-function leafletHardSync() {
-  const c = map.getCenter();
-  const z = map.getZoom();
-  const pane = leafletBase.getPanes() && leafletBase.getPanes().mapPane;
-  if (pane) pane.style.transform = '';
-  // QUAN TRONG: dung _resetView() (private API cua Leaflet), KHONG dung setView()
-  // cong khai. Leaflet's setView() co "fast path": neu center/zoom truyen vao
-  // giong voi gia tri dang luu (_lastCenter/_zoom), no bo qua toan bo buoc tinh
-  // lai _pixelOrigin va coi nhu khong co gi thay doi. leafletBase duoc tao luc
-  // trang vua load, khi #leaflet-base con display:none (kich thuoc container=0),
-  // nen _pixelOrigin ban dau bi tinh sai (nhu the container rong=0). Neu nguoi
-  // dung chon basemap Google ma CHUA random keo/zoom map truoc do, center/zoom
-  // luc goi setView() lan dau trung khop voi gia tri da luu -> fast path kich
-  // hoat -> _pixelOrigin sai KHONG BAO GIO duoc sua -> tile hien dung 1/4 dien
-  // tich giua man hinh (da xac nhan bang test truc tiep tren site that qua
-  // console: leftMin/leftMax/topMin/topMax chi phu duoc ~1/2 chieu rong va cao
-  // that su cua vung nhin). Day la nguyen nhan that su cua hien tuong "troi",
-  // khong phai do do tre khi keo chuot nhu 2 lan sua truoc. _resetView() ep
-  // tinh lai vo dieu kien, khong co fast path, nen luon dung bat ke co pan
-  // truoc do hay khong.
-  leafletBase._resetView(L.latLng(c.lat, c.lng), z, true);
-  leafletRefCenter = { lng: c.lng, lat: c.lat };
-  leafletRefZoom = z;
-}
-
-function leafletSoftSync() {
-  if (!leafletSyncActive || leafletRefCenter == null) return;
-  const pane = leafletBase.getPanes() && leafletBase.getPanes().mapPane;
-  if (!pane) return;
-  const c = map.getCenter();
-  const z = map.getZoom();
-  const s = Math.pow(2, z - leafletRefZoom);
-  const p0 = projectPixel(leafletRefCenter.lng, leafletRefCenter.lat, leafletRefZoom);
-  const p1 = projectPixel(c.lng, c.lat, leafletRefZoom);
-  const tx = p0.x - s * p1.x;
-  const ty = p0.y - s * p1.y;
-  pane.style.transformOrigin = '0 0';
-  pane.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${s})`;
-}
-
-// Neu chi hard-sync 1 lan duy nhat luc moveend, sau 1 cu keo dai (vai giay,
-// hang tram px), Leaflet se thay vi tri thuc te (theo doi rieng, khong biet
-// gi ve cac buoc transform CSS tam thoi o giua) nhay mot khoang lon so voi
-// lan setView truoc do -> hieu la "nhay xa", xoa sach tile cu va tai lai TOAN
-// BO thay vi chi tai them tile o rich moi lo ra (chinh la trieu chung "tai
-// di tai lai"). Khac phuc: hard-sync theo dinh ky (moi ~200ms) NGAY CA khi
-// con dang keo, giu buoc nhay giua 2 lan luon nho (~tuong duong 1 man hinh)
-// de Leaflet coi la pan thuong, giu lai tile cu va chi nap them phan ria.
-const HARD_SYNC_INTERVAL_MS = 200;
-let lastHardSyncTime = 0;
-
-map.on('move', () => {
-  leafletSoftSync();
-  if (!leafletSyncActive) return;
-  const now = (window.performance && performance.now) ? performance.now() : Date.now();
-  if (now - lastHardSyncTime >= HARD_SYNC_INTERVAL_MS) {
-    lastHardSyncTime = now;
-    leafletHardSync();
-  }
-});
-map.on('moveend', () => {
-  if (!leafletSyncActive) return;
-  lastHardSyncTime = (window.performance && performance.now) ? performance.now() : Date.now();
-  leafletHardSync();
-});
-map.on('resize', () => leafletBase.invalidateSize());
 
 map.on('load', () => {
   ICONS.forEach(([name, url]) => {
@@ -274,9 +114,6 @@ map.on('load', () => {
 
   // --- panel ban do nen (radio, chon 1) ---
   const basemapListEl = document.getElementById('basemap-list');
-  const leafletBaseEl = document.getElementById('leaflet-base');
-  const googleAttribEl = document.getElementById('google-attrib');
-
   BASEMAPS.forEach((basemap, i) => {
     const id = 'basemap-toggle-' + i;
     const wrapper = document.createElement('label');
@@ -289,28 +126,12 @@ map.on('load', () => {
     radio.checked = basemap.id === 'none';
     radio.addEventListener('change', () => {
       if (!radio.checked) return;
-
       ALL_BASEMAP_LAYERS.forEach((layerId) => {
         if (map.getLayer(layerId)) {
           const visible = basemap.layers.includes(layerId);
           map.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
         }
       });
-
-      if (basemap.dom === 'google') {
-        leafletBaseEl.style.display = 'block';
-        googleAttribEl.style.display = 'block';
-        if (!leafletBase.hasLayer(googleTileLayer)) googleTileLayer.addTo(leafletBase);
-        map.setPaintProperty('background', 'background-opacity', 0);
-        leafletSyncActive = true;
-        // container vua duoc display:block, Leaflet can tinh lai kich thuoc truoc khi setView
-        setTimeout(() => { leafletBase.invalidateSize(); leafletHardSync(); }, 0);
-      } else {
-        leafletSyncActive = false;
-        leafletBaseEl.style.display = 'none';
-        googleAttribEl.style.display = 'none';
-        map.setPaintProperty('background', 'background-opacity', 1);
-      }
     });
 
     wrapper.appendChild(radio);
