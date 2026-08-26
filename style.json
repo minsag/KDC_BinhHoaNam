@@ -1,18 +1,22 @@
 {
   "version": 8,
-  "name": "huy_test - khoi phuc tu Map.mapx",
+  "name": "KDC_BinhHoaNam - 3 khu 140/160/166 (tu KDC_BinhHoaNam.mapx)",
   "glyphs": "https://fonts.openmaptiles.org/{fontstack}/{range}.pbf",
   "sources": {
     "esri-imagery": {
       "type": "raster",
-      "tiles": ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"],
+      "tiles": [
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+      ],
       "tileSize": 256,
       "maxzoom": 18,
       "attribution": "Esri, Maxar, Earthstar Geographics, and the GIS User Community"
     },
     "esri-topo": {
       "type": "raster",
-      "tiles": ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}"],
+      "tiles": [
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}"
+      ],
       "tileSize": 256,
       "maxzoom": 18,
       "attribution": "Esri, HERE, Garmin, FAO, NOAA, USGS, © OpenStreetMap contributors, and the GIS User Community"
@@ -28,111 +32,1217 @@
       "maxzoom": 19,
       "attribution": "© OpenStreetMap contributors"
     },
-    "ranhKS": { "type": "geojson", "data": "data/ranhKS.geojson" },
-    "codo": { "type": "geojson", "data": "data/CoSoDoDac_DiemDoDacQuocGia.geojson" },
-    "cau": { "type": "geojson", "data": "data/GiaoThong_CauGiaoThong_Duong.geojson" },
-    "diemdocao": { "type": "geojson", "data": "data/DiaHinh_DiemDoCao.geojson" },
-    "thuyvan": { "type": "geojson", "data": "data/ThuyVan_DuongBoNuoc.geojson" },
-    "mepduong": { "type": "geojson", "data": "data/GiaoThong_MepDuong.geojson" },
-    "dancu": { "type": "geojson", "data": "data/DanCu_Nha_Vung.geojson" },
-    "caydoclap": { "type": "geojson", "data": "data/PhuBeMat_CayDocLap.geojson" },
-    "binhdo": { "type": "geojson", "data": "data/DiaHinh_DuongBinhDo.geojson" }
+    "140-ranhKS": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_RanhKS.geojson"
+    },
+    "140-dancu": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_DanCu_Nha_Vung.geojson"
+    },
+    "140-thuyvan": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_ThuyVan_DuongBoNuoc.geojson"
+    },
+    "140-mepduong": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_GiaoThong_MepDuong.geojson"
+    },
+    "140-cau": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_GiaoThong_CauGiaoThong_Duong.geojson"
+    },
+    "140-binhdo": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_DiaHinh_DuongBinhDo.geojson"
+    },
+    "140-caydoclap": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_PhuBeMat_CayDocLap.geojson"
+    },
+    "140-codo": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_CoSoDoDac_DiemDoDacQuocGia.geojson"
+    },
+    "140-diemdocao": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_DiaHinh_DiemDoCao.geojson"
+    },
+    "140-mocranhKS": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_mocranhKS.geojson"
+    },
+    "140-Bienbaogiaothong": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_Bienbaogiaothong.geojson"
+    },
+    "140-ThuyVan_BoKeBoCap": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_ThuyVan_BoKeBoCap.geojson"
+    },
+    "140-DanCu_DuongDayTaiDien": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_DanCu_DuongDayTaiDien.geojson"
+    },
+    "140-DanCu_CotDien": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_DanCu_CotDien.geojson"
+    },
+    "140-hogathoatnuoc": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_hogathoatnuoc.geojson"
+    },
+    "140-PhuBeMat_CayLauNam": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_PhuBeMat_CayLauNam.geojson"
+    },
+    "140-bonhoa": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_bonhoa.geojson"
+    },
+    "140-matnuoctinh": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_ThuyVan_MatNuocTinh.geojson"
+    },
+    "160-ranhKS": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_160_RanhKS.geojson"
+    },
+    "160-dancu": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_160_Nha_Vung.geojson"
+    },
+    "160-thuyvan": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_160_DuongBoNuoc.geojson"
+    },
+    "160-mepduong": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_160_MepDuong.geojson"
+    },
+    "160-binhdo": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_160_DuongBinhDo.geojson"
+    },
+    "160-caydoclap": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_160_CayDocLap.geojson"
+    },
+    "160-codo": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_160_DiemDoDacQuocGia.geojson"
+    },
+    "160-diemdocao": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_160_DiemDoCao.geojson"
+    },
+    "160-matnuoctinh": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_160_MatNuocTinh.geojson"
+    },
+    "166-ranhKS": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_166_ranhKS.geojson"
+    },
+    "166-dancu": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_166_DanCu_Nha_Vung.geojson"
+    },
+    "166-thuyvan": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_166_ThuyVan_DuongBoNuoc.geojson"
+    },
+    "166-mepduong": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_166_GiaoThong_MepDuong.geojson"
+    },
+    "166-cau": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_166_GiaoThong_CauGiaoThong_Duong.geojson"
+    },
+    "166-binhdo": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_166_DiaHinh_DuongBinhDo.geojson"
+    },
+    "166-caydoclap": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_166_PhuBeMat_CayDocLap.geojson"
+    },
+    "166-codo": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_166_CoSoDoDac_DiemDoDacQuocGia.geojson"
+    },
+    "166-diemdocao": {
+      "type": "geojson",
+      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_166_DiaHinh_DiemDoCao.geojson"
+    }
   },
   "layers": [
-    { "id": "background", "type": "background", "paint": { "background-color": "#ffffff", "background-opacity": 1 } },
-
-    { "id": "basemap-esri-imagery", "type": "raster", "source": "esri-imagery",
-      "layout": { "visibility": "none" },
-      "paint": { "raster-opacity": 1 } },
-    { "id": "basemap-esri-topo", "type": "raster", "source": "esri-topo",
-      "layout": { "visibility": "none" },
-      "paint": { "raster-opacity": 1 } },
-    { "id": "basemap-osm", "type": "raster", "source": "osm-standard",
-      "layout": { "visibility": "none" },
-      "paint": { "raster-opacity": 1 } },
-
-    { "id": "ranhKS-fill", "type": "fill", "source": "ranhKS",
-      "paint": { "fill-color": "#828282", "fill-opacity": 0 } },
-    { "id": "ranhKS-line", "type": "line", "source": "ranhKS",
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#ffffff",
+        "background-opacity": 1
+      }
+    },
+    {
+      "id": "basemap-esri-imagery",
+      "type": "raster",
+      "source": "esri-imagery",
+      "layout": {
+        "visibility": "none"
+      },
+      "paint": {
+        "raster-opacity": 1
+      }
+    },
+    {
+      "id": "basemap-esri-topo",
+      "type": "raster",
+      "source": "esri-topo",
+      "layout": {
+        "visibility": "none"
+      },
+      "paint": {
+        "raster-opacity": 1
+      }
+    },
+    {
+      "id": "basemap-osm",
+      "type": "raster",
+      "source": "osm-standard",
+      "layout": {
+        "visibility": "none"
+      },
+      "paint": {
+        "raster-opacity": 1
+      }
+    },
+    {
+      "id": "140-ranhKS-fill",
+      "type": "fill",
+      "source": "140-ranhKS",
+      "paint": {
+        "fill-color": "#828282",
+        "fill-opacity": 0
+      }
+    },
+    {
+      "id": "140-ranhKS-line",
+      "type": "line",
+      "source": "140-ranhKS",
       "paint": {
         "line-color": "#FF0000",
         "line-width": 2,
-        "line-dasharray": [12, 12]
-      } },
-
-    { "id": "dancu-fill", "type": "fill", "source": "dancu",
-      "paint": { "fill-color": "#F3EDD3" } },
-    { "id": "dancu-outline", "type": "line", "source": "dancu",
-      "paint": { "line-color": "#E0D2B8", "line-width": 0.6 } },
-
-    { "id": "thuyvan-line", "type": "line", "source": "thuyvan",
-      "layout": { "line-cap": "round" },
-      "paint": { "line-color": "#9EBBD7", "line-width": 1 } },
-
-    { "id": "mepduong-line", "type": "line", "source": "mepduong",
-      "paint": { "line-color": "#BDBDC5", "line-width": 1 } },
-
-    { "id": "cau-casing", "type": "line", "source": "cau",
-      "layout": { "line-cap": "round" },
-      "paint": { "line-color": "#B9B7B9", "line-width": 2.8 } },
-    { "id": "cau-fill", "type": "line", "source": "cau",
-      "layout": { "line-cap": "round" },
-      "paint": { "line-color": "#FFFFFF", "line-width": 1.3 } },
-
-    { "id": "binhdo-default", "type": "line", "source": "binhdo",
-      "filter": ["!", ["in", ["get", "loaiDuongBinhDo"], ["literal", [1,2,3,4]]]],
-      "paint": { "line-color": "#828282", "line-width": 1 } },
-    { "id": "binhdo-cobanban", "type": "line", "source": "binhdo",
-      "filter": ["==", ["get", "loaiDuongBinhDo"], 1],
-      "layout": { "line-cap": "butt", "line-join": "round" },
-      "paint": { "line-color": "#E69800", "line-width": 1.2 } },
-    { "id": "binhdo-nuakhoang", "type": "line", "source": "binhdo",
-      "filter": ["==", ["get", "loaiDuongBinhDo"], 2],
-      "layout": { "line-cap": "round", "line-join": "round" },
-      "paint": { "line-color": "#BAFDB5", "line-width": 1 } },
-    { "id": "binhdo-phu", "type": "line", "source": "binhdo",
-      "filter": ["==", ["get", "loaiDuongBinhDo"], 3],
-      "layout": { "line-cap": "butt", "line-join": "round" },
-      "paint": { "line-color": "#FFD37F", "line-width": 0.4 } },
-    { "id": "binhdo-nhap", "type": "line", "source": "binhdo",
-      "filter": ["==", ["get", "loaiDuongBinhDo"], 4],
-      "layout": { "line-cap": "butt", "line-join": "round" },
+        "line-dasharray": [
+          12,
+          12
+        ]
+      }
+    },
+    {
+      "id": "140-dancu-fill",
+      "type": "fill",
+      "source": "140-dancu",
+      "paint": {
+        "fill-color": "#F3EDD3"
+      }
+    },
+    {
+      "id": "140-dancu-outline",
+      "type": "line",
+      "source": "140-dancu",
+      "paint": {
+        "line-color": "#E0D2B8",
+        "line-width": 0.6
+      }
+    },
+    {
+      "id": "140-thuyvan-line",
+      "type": "line",
+      "source": "140-thuyvan",
+      "layout": {
+        "line-cap": "round"
+      },
+      "paint": {
+        "line-color": "#9EBBD7",
+        "line-width": 1
+      }
+    },
+    {
+      "id": "140-mepduong-line",
+      "type": "line",
+      "source": "140-mepduong",
+      "paint": {
+        "line-color": "#BDBDC5",
+        "line-width": 1
+      }
+    },
+    {
+      "id": "140-cau-casing",
+      "type": "line",
+      "source": "140-cau",
+      "layout": {
+        "line-cap": "round"
+      },
+      "paint": {
+        "line-color": "#B9B7B9",
+        "line-width": 2.8
+      }
+    },
+    {
+      "id": "140-cau-fill",
+      "type": "line",
+      "source": "140-cau",
+      "layout": {
+        "line-cap": "round"
+      },
+      "paint": {
+        "line-color": "#FFFFFF",
+        "line-width": 1.3
+      }
+    },
+    {
+      "id": "140-binhdo-default",
+      "type": "line",
+      "source": "140-binhdo",
+      "filter": [
+        "!",
+        [
+          "in",
+          [
+            "get",
+            "loaiDuongBinhDo"
+          ],
+          [
+            "literal",
+            [
+              1,
+              2,
+              3,
+              4
+            ]
+          ]
+        ]
+      ],
+      "paint": {
+        "line-color": "#828282",
+        "line-width": 1
+      }
+    },
+    {
+      "id": "140-binhdo-cobanban",
+      "type": "line",
+      "source": "140-binhdo",
+      "filter": [
+        "==",
+        [
+          "get",
+          "loaiDuongBinhDo"
+        ],
+        1
+      ],
+      "layout": {
+        "line-cap": "butt",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#E69800",
+        "line-width": 1.2
+      }
+    },
+    {
+      "id": "140-binhdo-nuakhoang",
+      "type": "line",
+      "source": "140-binhdo",
+      "filter": [
+        "==",
+        [
+          "get",
+          "loaiDuongBinhDo"
+        ],
+        2
+      ],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#BAFDB5",
+        "line-width": 1
+      }
+    },
+    {
+      "id": "140-binhdo-phu",
+      "type": "line",
+      "source": "140-binhdo",
+      "filter": [
+        "==",
+        [
+          "get",
+          "loaiDuongBinhDo"
+        ],
+        3
+      ],
+      "layout": {
+        "line-cap": "butt",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#FFD37F",
+        "line-width": 0.4
+      }
+    },
+    {
+      "id": "140-binhdo-nhap",
+      "type": "line",
+      "source": "140-binhdo",
+      "filter": [
+        "==",
+        [
+          "get",
+          "loaiDuongBinhDo"
+        ],
+        4
+      ],
+      "layout": {
+        "line-cap": "butt",
+        "line-join": "round"
+      },
       "paint": {
         "line-color": "#CCEDFF",
         "line-width": 0.4,
-        "line-dasharray": [7, 1, 3, 1]
-      } },
-
-    { "id": "caydoclap-icon", "type": "symbol", "source": "caydoclap",
+        "line-dasharray": [
+          7,
+          1,
+          3,
+          1
+        ]
+      }
+    },
+    {
+      "id": "140-caydoclap-icon",
+      "type": "symbol",
+      "source": "140-caydoclap",
       "layout": {
         "icon-image": "cay_doc_lap",
         "icon-size": 0.6,
         "icon-allow-overlap": true
-      } },
-
-    { "id": "codo-default", "type": "circle", "source": "codo",
-      "filter": ["!", ["in", ["get", "maNhanDang"], ["literal", ["DC","GPS"]]]],
-      "paint": { "circle-color": "#828282", "circle-stroke-color": "#000000", "circle-stroke-width": 0.7, "circle-radius": 4 } },
-    { "id": "codo-dc", "type": "symbol", "source": "codo",
-      "filter": ["==", ["get", "maNhanDang"], "DC"],
-      "layout": { "icon-image": "co_so_do_dac_DC", "icon-size": 0.5, "icon-allow-overlap": true } },
-    { "id": "codo-gps", "type": "symbol", "source": "codo",
-      "filter": ["==", ["get", "maNhanDang"], "GPS"],
-      "layout": { "icon-image": "co_so_do_dac_GPS", "icon-size": 0.5, "icon-allow-overlap": true } },
-
-    { "id": "diemdocao-icon", "type": "symbol", "source": "diemdocao",
-      "layout": { "icon-image": "diem_do_cao", "icon-size": 0.4, "icon-allow-overlap": true } },
-    { "id": "diemdocao-label", "type": "symbol", "source": "diemdocao",
+      }
+    },
+    {
+      "id": "140-codo-default",
+      "type": "circle",
+      "source": "140-codo",
+      "filter": [
+        "!",
+        [
+          "in",
+          [
+            "get",
+            "maNhanDang"
+          ],
+          [
+            "literal",
+            [
+              "DC",
+              "GPS"
+            ]
+          ]
+        ]
+      ],
+      "paint": {
+        "circle-color": "#828282",
+        "circle-stroke-color": "#000000",
+        "circle-stroke-width": 0.7,
+        "circle-radius": 4
+      }
+    },
+    {
+      "id": "140-codo-dc",
+      "type": "symbol",
+      "source": "140-codo",
+      "filter": [
+        "==",
+        [
+          "get",
+          "maNhanDang"
+        ],
+        "DC"
+      ],
+      "layout": {
+        "icon-image": "co_so_do_dac_DC",
+        "icon-size": 0.5,
+        "icon-allow-overlap": true
+      }
+    },
+    {
+      "id": "140-codo-gps",
+      "type": "symbol",
+      "source": "140-codo",
+      "filter": [
+        "==",
+        [
+          "get",
+          "maNhanDang"
+        ],
+        "GPS"
+      ],
+      "layout": {
+        "icon-image": "co_so_do_dac_GPS",
+        "icon-size": 0.5,
+        "icon-allow-overlap": true
+      }
+    },
+    {
+      "id": "140-diemdocao-icon",
+      "type": "symbol",
+      "source": "140-diemdocao",
+      "layout": {
+        "icon-image": "diem_do_cao",
+        "icon-size": 0.4,
+        "icon-allow-overlap": true
+      }
+    },
+    {
+      "id": "140-diemdocao-label",
+      "type": "symbol",
+      "source": "140-diemdocao",
       "minzoom": 18,
       "layout": {
-        "text-field": ["get", "doCao"],
-        "text-font": ["Open Sans Regular"],
+        "text-field": [
+          "get",
+          "doCao"
+        ],
+        "text-font": [
+          "Open Sans Regular"
+        ],
         "text-size": 10,
-        "text-offset": [0, 0.8],
+        "text-offset": [
+          0,
+          0.8
+        ],
         "text-anchor": "top",
         "text-allow-overlap": true,
         "text-ignore-placement": true
       },
-      "paint": { "text-color": "#000000", "text-halo-color": "#ffffff", "text-halo-width": 1.2 } }
+      "paint": {
+        "text-color": "#000000",
+        "text-halo-color": "#ffffff",
+        "text-halo-width": 1.2
+      }
+    },
+    {
+      "id": "140-mocranhKS-icon",
+      "type": "symbol",
+      "source": "140-mocranhKS",
+      "layout": {
+        "icon-image": "moc_ranh_ks",
+        "icon-size": 0.7,
+        "icon-allow-overlap": true
+      }
+    },
+    {
+      "id": "140-Bienbaogiaothong-icon",
+      "type": "symbol",
+      "source": "140-Bienbaogiaothong",
+      "layout": {
+        "icon-image": "bien_bao_giao_thong",
+        "icon-size": 0.6,
+        "icon-allow-overlap": true
+      }
+    },
+    {
+      "id": "140-ThuyVan_BoKeBoCap-line",
+      "type": "line",
+      "source": "140-ThuyVan_BoKeBoCap",
+      "paint": {
+        "line-color": "#9EBBD7",
+        "line-width": 0.4,
+        "line-dasharray": [
+          7,
+          1,
+          3,
+          1
+        ]
+      }
+    },
+    {
+      "id": "140-DanCu_DuongDayTaiDien-line",
+      "type": "line",
+      "source": "140-DanCu_DuongDayTaiDien",
+      "paint": {
+        "line-color": "#828282",
+        "line-width": 1,
+        "line-dasharray": [
+          4,
+          4
+        ]
+      }
+    },
+    {
+      "id": "140-DanCu_CotDien-icon",
+      "type": "symbol",
+      "source": "140-DanCu_CotDien",
+      "layout": {
+        "icon-image": "dan_cu_cot_dien",
+        "icon-size": 0.7,
+        "icon-allow-overlap": true
+      }
+    },
+    {
+      "id": "140-hogathoatnuoc-fill",
+      "type": "fill",
+      "source": "140-hogathoatnuoc",
+      "paint": {
+        "fill-color": "#C90464"
+      }
+    },
+    {
+      "id": "140-hogathoatnuoc-outline",
+      "type": "line",
+      "source": "140-hogathoatnuoc",
+      "paint": {
+        "line-color": "#C11D44",
+        "line-width": 1
+      }
+    },
+    {
+      "id": "140-PhuBeMat_CayLauNam-fill",
+      "type": "fill",
+      "source": "140-PhuBeMat_CayLauNam",
+      "paint": {
+        "fill-color": "#C6E2B2"
+      }
+    },
+    {
+      "id": "140-bonhoa-fill",
+      "type": "fill",
+      "source": "140-bonhoa",
+      "paint": {
+        "fill-color": "#E9FFBE"
+      }
+    },
+    {
+      "id": "140-matnuoctinh-fill",
+      "type": "fill",
+      "source": "140-matnuoctinh",
+      "paint": {
+        "fill-color": "#97DBF2"
+      }
+    },
+    {
+      "id": "160-ranhKS-fill",
+      "type": "fill",
+      "source": "160-ranhKS",
+      "paint": {
+        "fill-color": "#828282",
+        "fill-opacity": 0
+      }
+    },
+    {
+      "id": "160-ranhKS-line",
+      "type": "line",
+      "source": "160-ranhKS",
+      "paint": {
+        "line-color": "#FF0000",
+        "line-width": 2,
+        "line-dasharray": [
+          12,
+          12
+        ]
+      }
+    },
+    {
+      "id": "160-dancu-fill",
+      "type": "fill",
+      "source": "160-dancu",
+      "paint": {
+        "fill-color": "#F3EDD3"
+      }
+    },
+    {
+      "id": "160-dancu-outline",
+      "type": "line",
+      "source": "160-dancu",
+      "paint": {
+        "line-color": "#E0D2B8",
+        "line-width": 0.6
+      }
+    },
+    {
+      "id": "160-thuyvan-line",
+      "type": "line",
+      "source": "160-thuyvan",
+      "layout": {
+        "line-cap": "round"
+      },
+      "paint": {
+        "line-color": "#9EBBD7",
+        "line-width": 1
+      }
+    },
+    {
+      "id": "160-mepduong-line",
+      "type": "line",
+      "source": "160-mepduong",
+      "paint": {
+        "line-color": "#BDBDC5",
+        "line-width": 1
+      }
+    },
+    {
+      "id": "160-binhdo-default",
+      "type": "line",
+      "source": "160-binhdo",
+      "filter": [
+        "!",
+        [
+          "in",
+          [
+            "get",
+            "loaiDuongBinhDo"
+          ],
+          [
+            "literal",
+            [
+              1,
+              2,
+              3,
+              4
+            ]
+          ]
+        ]
+      ],
+      "paint": {
+        "line-color": "#828282",
+        "line-width": 1
+      }
+    },
+    {
+      "id": "160-binhdo-cobanban",
+      "type": "line",
+      "source": "160-binhdo",
+      "filter": [
+        "==",
+        [
+          "get",
+          "loaiDuongBinhDo"
+        ],
+        1
+      ],
+      "layout": {
+        "line-cap": "butt",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#E69800",
+        "line-width": 1.2
+      }
+    },
+    {
+      "id": "160-binhdo-nuakhoang",
+      "type": "line",
+      "source": "160-binhdo",
+      "filter": [
+        "==",
+        [
+          "get",
+          "loaiDuongBinhDo"
+        ],
+        2
+      ],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#BAFDB5",
+        "line-width": 1
+      }
+    },
+    {
+      "id": "160-binhdo-phu",
+      "type": "line",
+      "source": "160-binhdo",
+      "filter": [
+        "==",
+        [
+          "get",
+          "loaiDuongBinhDo"
+        ],
+        3
+      ],
+      "layout": {
+        "line-cap": "butt",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#FFD37F",
+        "line-width": 0.4
+      }
+    },
+    {
+      "id": "160-binhdo-nhap",
+      "type": "line",
+      "source": "160-binhdo",
+      "filter": [
+        "==",
+        [
+          "get",
+          "loaiDuongBinhDo"
+        ],
+        4
+      ],
+      "layout": {
+        "line-cap": "butt",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#CCEDFF",
+        "line-width": 0.4,
+        "line-dasharray": [
+          7,
+          1,
+          3,
+          1
+        ]
+      }
+    },
+    {
+      "id": "160-caydoclap-icon",
+      "type": "symbol",
+      "source": "160-caydoclap",
+      "layout": {
+        "icon-image": "cay_doc_lap",
+        "icon-size": 0.6,
+        "icon-allow-overlap": true
+      }
+    },
+    {
+      "id": "160-codo-default",
+      "type": "circle",
+      "source": "160-codo",
+      "filter": [
+        "!",
+        [
+          "in",
+          [
+            "get",
+            "maNhanDang"
+          ],
+          [
+            "literal",
+            [
+              "DC",
+              "GPS"
+            ]
+          ]
+        ]
+      ],
+      "paint": {
+        "circle-color": "#828282",
+        "circle-stroke-color": "#000000",
+        "circle-stroke-width": 0.7,
+        "circle-radius": 4
+      }
+    },
+    {
+      "id": "160-codo-dc",
+      "type": "symbol",
+      "source": "160-codo",
+      "filter": [
+        "==",
+        [
+          "get",
+          "maNhanDang"
+        ],
+        "DC"
+      ],
+      "layout": {
+        "icon-image": "co_so_do_dac_DC",
+        "icon-size": 0.5,
+        "icon-allow-overlap": true
+      }
+    },
+    {
+      "id": "160-codo-gps",
+      "type": "symbol",
+      "source": "160-codo",
+      "filter": [
+        "==",
+        [
+          "get",
+          "maNhanDang"
+        ],
+        "GPS"
+      ],
+      "layout": {
+        "icon-image": "co_so_do_dac_GPS",
+        "icon-size": 0.5,
+        "icon-allow-overlap": true
+      }
+    },
+    {
+      "id": "160-diemdocao-icon",
+      "type": "symbol",
+      "source": "160-diemdocao",
+      "layout": {
+        "icon-image": "diem_do_cao",
+        "icon-size": 0.4,
+        "icon-allow-overlap": true
+      }
+    },
+    {
+      "id": "160-diemdocao-label",
+      "type": "symbol",
+      "source": "160-diemdocao",
+      "minzoom": 18,
+      "layout": {
+        "text-field": [
+          "get",
+          "doCao"
+        ],
+        "text-font": [
+          "Open Sans Regular"
+        ],
+        "text-size": 10,
+        "text-offset": [
+          0,
+          0.8
+        ],
+        "text-anchor": "top",
+        "text-allow-overlap": true,
+        "text-ignore-placement": true
+      },
+      "paint": {
+        "text-color": "#000000",
+        "text-halo-color": "#ffffff",
+        "text-halo-width": 1.2
+      }
+    },
+    {
+      "id": "160-matnuoctinh-fill",
+      "type": "fill",
+      "source": "160-matnuoctinh",
+      "paint": {
+        "fill-color": "#97DBF2"
+      }
+    },
+    {
+      "id": "166-ranhKS-fill",
+      "type": "fill",
+      "source": "166-ranhKS",
+      "paint": {
+        "fill-color": "#828282",
+        "fill-opacity": 0
+      }
+    },
+    {
+      "id": "166-ranhKS-line",
+      "type": "line",
+      "source": "166-ranhKS",
+      "paint": {
+        "line-color": "#FF0000",
+        "line-width": 2,
+        "line-dasharray": [
+          12,
+          12
+        ]
+      }
+    },
+    {
+      "id": "166-dancu-fill",
+      "type": "fill",
+      "source": "166-dancu",
+      "paint": {
+        "fill-color": "#F3EDD3"
+      }
+    },
+    {
+      "id": "166-dancu-outline",
+      "type": "line",
+      "source": "166-dancu",
+      "paint": {
+        "line-color": "#E0D2B8",
+        "line-width": 0.6
+      }
+    },
+    {
+      "id": "166-thuyvan-line",
+      "type": "line",
+      "source": "166-thuyvan",
+      "layout": {
+        "line-cap": "round"
+      },
+      "paint": {
+        "line-color": "#9EBBD7",
+        "line-width": 1
+      }
+    },
+    {
+      "id": "166-mepduong-line",
+      "type": "line",
+      "source": "166-mepduong",
+      "paint": {
+        "line-color": "#BDBDC5",
+        "line-width": 1
+      }
+    },
+    {
+      "id": "166-cau-casing",
+      "type": "line",
+      "source": "166-cau",
+      "layout": {
+        "line-cap": "round"
+      },
+      "paint": {
+        "line-color": "#B9B7B9",
+        "line-width": 2.8
+      }
+    },
+    {
+      "id": "166-cau-fill",
+      "type": "line",
+      "source": "166-cau",
+      "layout": {
+        "line-cap": "round"
+      },
+      "paint": {
+        "line-color": "#FFFFFF",
+        "line-width": 1.3
+      }
+    },
+    {
+      "id": "166-binhdo-default",
+      "type": "line",
+      "source": "166-binhdo",
+      "filter": [
+        "!",
+        [
+          "in",
+          [
+            "get",
+            "loaiDuongBinhDo"
+          ],
+          [
+            "literal",
+            [
+              1,
+              2,
+              3,
+              4
+            ]
+          ]
+        ]
+      ],
+      "paint": {
+        "line-color": "#828282",
+        "line-width": 1
+      }
+    },
+    {
+      "id": "166-binhdo-cobanban",
+      "type": "line",
+      "source": "166-binhdo",
+      "filter": [
+        "==",
+        [
+          "get",
+          "loaiDuongBinhDo"
+        ],
+        1
+      ],
+      "layout": {
+        "line-cap": "butt",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#E69800",
+        "line-width": 1.2
+      }
+    },
+    {
+      "id": "166-binhdo-nuakhoang",
+      "type": "line",
+      "source": "166-binhdo",
+      "filter": [
+        "==",
+        [
+          "get",
+          "loaiDuongBinhDo"
+        ],
+        2
+      ],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#BAFDB5",
+        "line-width": 1
+      }
+    },
+    {
+      "id": "166-binhdo-phu",
+      "type": "line",
+      "source": "166-binhdo",
+      "filter": [
+        "==",
+        [
+          "get",
+          "loaiDuongBinhDo"
+        ],
+        3
+      ],
+      "layout": {
+        "line-cap": "butt",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#FFD37F",
+        "line-width": 0.4
+      }
+    },
+    {
+      "id": "166-binhdo-nhap",
+      "type": "line",
+      "source": "166-binhdo",
+      "filter": [
+        "==",
+        [
+          "get",
+          "loaiDuongBinhDo"
+        ],
+        4
+      ],
+      "layout": {
+        "line-cap": "butt",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#CCEDFF",
+        "line-width": 0.4,
+        "line-dasharray": [
+          7,
+          1,
+          3,
+          1
+        ]
+      }
+    },
+    {
+      "id": "166-caydoclap-icon",
+      "type": "symbol",
+      "source": "166-caydoclap",
+      "layout": {
+        "icon-image": "cay_doc_lap",
+        "icon-size": 0.6,
+        "icon-allow-overlap": true
+      }
+    },
+    {
+      "id": "166-codo-default",
+      "type": "circle",
+      "source": "166-codo",
+      "filter": [
+        "!",
+        [
+          "in",
+          [
+            "get",
+            "maNhanDang"
+          ],
+          [
+            "literal",
+            [
+              "DC",
+              "GPS"
+            ]
+          ]
+        ]
+      ],
+      "paint": {
+        "circle-color": "#828282",
+        "circle-stroke-color": "#000000",
+        "circle-stroke-width": 0.7,
+        "circle-radius": 4
+      }
+    },
+    {
+      "id": "166-codo-dc",
+      "type": "symbol",
+      "source": "166-codo",
+      "filter": [
+        "==",
+        [
+          "get",
+          "maNhanDang"
+        ],
+        "DC"
+      ],
+      "layout": {
+        "icon-image": "co_so_do_dac_DC",
+        "icon-size": 0.5,
+        "icon-allow-overlap": true
+      }
+    },
+    {
+      "id": "166-codo-gps",
+      "type": "symbol",
+      "source": "166-codo",
+      "filter": [
+        "==",
+        [
+          "get",
+          "maNhanDang"
+        ],
+        "GPS"
+      ],
+      "layout": {
+        "icon-image": "co_so_do_dac_GPS",
+        "icon-size": 0.5,
+        "icon-allow-overlap": true
+      }
+    },
+    {
+      "id": "166-diemdocao-icon",
+      "type": "symbol",
+      "source": "166-diemdocao",
+      "layout": {
+        "icon-image": "diem_do_cao",
+        "icon-size": 0.4,
+        "icon-allow-overlap": true
+      }
+    },
+    {
+      "id": "166-diemdocao-label",
+      "type": "symbol",
+      "source": "166-diemdocao",
+      "minzoom": 18,
+      "layout": {
+        "text-field": [
+          "get",
+          "doCao"
+        ],
+        "text-font": [
+          "Open Sans Regular"
+        ],
+        "text-size": 10,
+        "text-offset": [
+          0,
+          0.8
+        ],
+        "text-anchor": "top",
+        "text-allow-overlap": true,
+        "text-ignore-placement": true
+      },
+      "paint": {
+        "text-color": "#000000",
+        "text-halo-color": "#ffffff",
+        "text-halo-width": 1.2
+      }
+    }
   ]
 }
