@@ -6,15 +6,48 @@
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
 <script src="vendor/maplibre-gl/maplibre-gl.js"></script>
 <link href="vendor/maplibre-gl/maplibre-gl.css" rel="stylesheet" />
+<script src="vendor/leaflet/leaflet.js"></script>
+<link href="vendor/leaflet/leaflet.css" rel="stylesheet" />
 <style>
   body { margin: 0; padding: 0; }
-  #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+
+  /* Lop nen DOM (Leaflet) - chi dung cho basemap Google, nam DUOI canvas MapLibre.
+     Tile load qua the <img> thuong nen khong bi WebGL CORS/taint-check chan,
+     nhung cung vi vay khong dung chung co che raster-source cua style.json. */
+  #leaflet-base {
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    display: none;
+    pointer-events: none;
+  }
+  #map {
+    position: absolute;
+    top: 0; bottom: 0; width: 100%; height: 100%;
+    z-index: 1;
+    background: transparent;
+  }
+
+  #google-attrib {
+    position: absolute;
+    bottom: 2px;
+    right: 4px;
+    z-index: 2;
+    display: none;
+    font: 10px/1.3 -apple-system, Segoe UI, Roboto, sans-serif;
+    background: rgba(255,255,255,0.75);
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: #333;
+    pointer-events: none;
+  }
 
   #layer-control {
     position: absolute;
     top: 10px;
     left: 10px;
-    z-index: 1;
+    z-index: 3;
     background: rgba(255,255,255,0.94);
     border-radius: 4px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.3);
@@ -48,7 +81,9 @@
 </style>
 </head>
 <body>
+<div id="leaflet-base"></div>
 <div id="map"></div>
+<div id="google-attrib">© Google — endpoint nội bộ google.cn, không phải Maps Platform API chính thức, có thể ngừng hoạt động bất kỳ lúc nào</div>
 <div id="layer-control">
   <h4>Bản đồ nền</h4>
   <div class="layer-list" id="basemap-list"></div>
@@ -63,19 +98,24 @@ const ICONS = [
   ['diem_do_cao', 'icons/diem_do_cao@2x.png']
 ];
 
-// Ban do nen: chon 1 trong nhieu (radio), 3 lua chon dau la nguon cong khai hop le
-// (Esri basemap ToS cho phep dung trong web app voi attribution, khong can API
-// key; OpenStreetMap theo Tile Usage Policy - dung vua phai, co attribution).
-// "Anh ve tinh (Google)" dung endpoint tile noi bo google.cn/maps/vt - KHONG phai
-// Maps Platform API chinh thuc, vi pham Dieu khoan dich vu Google Maps/Earth khi
-// dung ngoai trinh duyet Google Maps. Da trao doi va nguoi yeu cau CHAP NHAN RUI RO
-// nay them lan nua (2026-08-25). Mac dinh radio group van la "Khong nen".
+// Ban do nen: chon 1 trong nhieu (radio).
+// - esri-imagery / esri-topo / osm: nguon cong khai hop le, render qua raster
+//   source chuan cua MapLibre (WebGL texture, can CORS - ca 3 deu co).
+// - google-sat: dung endpoint noi bo google.cn/maps/vt, KHONG co header CORS
+//   nen khong the load qua raster source WebGL binh thuong (bi chan boi chinh
+//   trinh duyet, khong phai loi cau hinh). Giai phap: tai qua Leaflet (the
+//   <img> DOM, khong bi WebGL taint-check) chay o mot lop rieng ben duoi
+//   canvas MapLibre, dong bo pan/zoom bang tay - xem syncLeafletBase().
+//   Van la endpoint khong chinh thuc, vi pham Dieu khoan dich vu Google
+//   Maps/Earth khi dung ngoai trinh duyet Google Maps. Nguoi yeu cau da
+//   duoc canh bao va CHAP NHAN RUI RO nay (2026-08-25) - hieu ro co the bi
+//   Google chan/doi endpoint bat cu luc nao khong bao truoc.
 const BASEMAPS = [
   { id: 'none', label: 'Không nền', layers: [] },
   { id: 'esri-imagery', label: 'Ảnh vệ tinh (Esri)', layers: ['basemap-esri-imagery'] },
   { id: 'esri-topo', label: 'Địa hình (Esri Topo)', layers: ['basemap-esri-topo'] },
   { id: 'osm', label: 'Bản đồ đường phố (OSM)', layers: ['basemap-osm'] },
-  { id: 'google-sat', label: 'Ảnh vệ tinh (Google)', layers: ['basemap-google-sat'] }
+  { id: 'google-sat', label: 'Ảnh vệ tinh (Google, không chính thức)', layers: [], dom: 'google' }
 ];
 const ALL_BASEMAP_LAYERS = BASEMAPS.flatMap(b => b.layers);
 
@@ -92,12 +132,50 @@ const LAYER_GROUPS = [
   { label: 'Điểm độ cao',       layers: ['diemdocao-icon', 'diemdocao-label'] }
 ];
 
+const INITIAL_CENTER = [106.3504, 10.7874]; // centroid bbox du lieu thuc te (Long An)
+const INITIAL_ZOOM = 15;
+
 const map = new maplibregl.Map({
   container: 'map',
   style: 'style.json',
-  center: [106.3504, 10.7874], // centroid bbox du lieu thuc te (Long An)
-  zoom: 15
+  center: INITIAL_CENTER,
+  zoom: INITIAL_ZOOM,
+  // Tat rotate/pitch: ban do dia chinh 2D, khong can xoay/nghieng, va Leaflet
+  // (lop DOM cho basemap Google) khong ho tro rotate nen neu cho phep xoay
+  // se lam 2 lop lech nhau.
+  dragRotate: false,
+  pitchWithRotate: false,
+  touchPitch: false
 });
+
+// --- lop DOM (Leaflet) cho basemap Google, chi khoi tao/dieu khien khi can ---
+const leafletBase = L.map('leaflet-base', {
+  zoomControl: false,
+  attributionControl: false,
+  dragging: false,
+  touchZoom: false,
+  scrollWheelZoom: false,
+  doubleClickZoom: false,
+  boxZoom: false,
+  keyboard: false,
+  tap: false,
+  zoomSnap: 0,
+  zoomAnimation: false,
+  fadeAnimation: false,
+  inertia: false
+}).setView([INITIAL_CENTER[1], INITIAL_CENTER[0]], INITIAL_ZOOM);
+
+const googleTileLayer = L.tileLayer(
+  'https://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}',
+  { tileSize: 256, maxZoom: 20, attribution: '© Google' }
+);
+
+function syncLeafletBase() {
+  const c = map.getCenter();
+  leafletBase.setView([c.lat, c.lng], map.getZoom(), { animate: false });
+}
+map.on('move', syncLeafletBase);
+map.on('resize', () => leafletBase.invalidateSize());
 
 map.on('load', () => {
   ICONS.forEach(([name, url]) => {
@@ -109,6 +187,9 @@ map.on('load', () => {
 
   // --- panel ban do nen (radio, chon 1) ---
   const basemapListEl = document.getElementById('basemap-list');
+  const leafletBaseEl = document.getElementById('leaflet-base');
+  const googleAttribEl = document.getElementById('google-attrib');
+
   BASEMAPS.forEach((basemap, i) => {
     const id = 'basemap-toggle-' + i;
     const wrapper = document.createElement('label');
@@ -121,12 +202,27 @@ map.on('load', () => {
     radio.checked = basemap.id === 'none';
     radio.addEventListener('change', () => {
       if (!radio.checked) return;
+
       ALL_BASEMAP_LAYERS.forEach((layerId) => {
         if (map.getLayer(layerId)) {
           const visible = basemap.layers.includes(layerId);
           map.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
         }
       });
+
+      if (basemap.dom === 'google') {
+        leafletBaseEl.style.display = 'block';
+        googleAttribEl.style.display = 'block';
+        if (!leafletBase.hasLayer(googleTileLayer)) googleTileLayer.addTo(leafletBase);
+        map.setPaintProperty('background', 'background-opacity', 0);
+        syncLeafletBase();
+        // container vua duoc display:block, Leaflet can tinh lai kich thuoc
+        setTimeout(() => leafletBase.invalidateSize(), 0);
+      } else {
+        leafletBaseEl.style.display = 'none';
+        googleAttribEl.style.display = 'none';
+        map.setPaintProperty('background', 'background-opacity', 1);
+      }
     });
 
     wrapper.appendChild(radio);
@@ -160,7 +256,7 @@ map.on('load', () => {
   });
 });
 
-map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.NavigationControl({ showCompass: false }));
 map.addControl(new maplibregl.AttributionControl({ compact: true }));
 </script>
 </body>
