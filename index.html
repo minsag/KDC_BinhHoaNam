@@ -167,7 +167,13 @@ const leafletBase = L.map('leaflet-base', {
 
 const googleTileLayer = L.tileLayer(
   'https://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}',
-  { tileSize: 256, maxZoom: 20, attribution: '© Google' }
+  {
+    tileSize: 256,
+    maxZoom: 20,
+    attribution: '© Google',
+    keepBuffer: 4,       // giu them tile ngoai vien man hinh, do "hut" khi hard-sync nhay vi tri
+    updateWhenZooming: false
+  }
 );
 
 // --- dong bo Leaflet theo MapLibre, 2 tang: mem (transform CSS) + cung (setView that) ---
@@ -216,8 +222,31 @@ function leafletSoftSync() {
   pane.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${s})`;
 }
 
-map.on('move', leafletSoftSync);
-map.on('moveend', leafletHardSync);
+// Neu chi hard-sync 1 lan duy nhat luc moveend, sau 1 cu keo dai (vai giay,
+// hang tram px), Leaflet se thay vi tri thuc te (theo doi rieng, khong biet
+// gi ve cac buoc transform CSS tam thoi o giua) nhay mot khoang lon so voi
+// lan setView truoc do -> hieu la "nhay xa", xoa sach tile cu va tai lai TOAN
+// BO thay vi chi tai them tile o rich moi lo ra (chinh la trieu chung "tai
+// di tai lai"). Khac phuc: hard-sync theo dinh ky (moi ~200ms) NGAY CA khi
+// con dang keo, giu buoc nhay giua 2 lan luon nho (~tuong duong 1 man hinh)
+// de Leaflet coi la pan thuong, giu lai tile cu va chi nap them phan ria.
+const HARD_SYNC_INTERVAL_MS = 200;
+let lastHardSyncTime = 0;
+
+map.on('move', () => {
+  leafletSoftSync();
+  if (!leafletSyncActive) return;
+  const now = (window.performance && performance.now) ? performance.now() : Date.now();
+  if (now - lastHardSyncTime >= HARD_SYNC_INTERVAL_MS) {
+    lastHardSyncTime = now;
+    leafletHardSync();
+  }
+});
+map.on('moveend', () => {
+  if (!leafletSyncActive) return;
+  lastHardSyncTime = (window.performance && performance.now) ? performance.now() : Date.now();
+  leafletHardSync();
+});
 map.on('resize', () => leafletBase.invalidateSize());
 
 map.on('load', () => {
