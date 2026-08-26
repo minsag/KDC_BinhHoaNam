@@ -34,147 +34,147 @@
     },
     "140-ranhKS": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_RanhKS.geojson"
+      "data": "data/KDC_BinhHoaNam_140_RanhKS.geojson"
     },
     "140-dancu": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_DanCu_Nha_Vung.geojson"
+      "data": "data/KDC_BinhHoaNam_140_DanCu_Nha_Vung.geojson"
     },
     "140-thuyvan": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_ThuyVan_DuongBoNuoc.geojson"
+      "data": "data/KDC_BinhHoaNam_140_ThuyVan_DuongBoNuoc.geojson"
     },
     "140-mepduong": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_GiaoThong_MepDuong.geojson"
+      "data": "data/KDC_BinhHoaNam_140_GiaoThong_MepDuong.geojson"
     },
     "140-cau": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_GiaoThong_CauGiaoThong_Duong.geojson"
+      "data": "data/KDC_BinhHoaNam_140_GiaoThong_CauGiaoThong_Duong.geojson"
     },
     "140-binhdo": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_DiaHinh_DuongBinhDo.geojson"
+      "data": "data/KDC_BinhHoaNam_140_DiaHinh_DuongBinhDo.geojson"
     },
     "140-caydoclap": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_PhuBeMat_CayDocLap.geojson"
+      "data": "data/KDC_BinhHoaNam_140_PhuBeMat_CayDocLap.geojson"
     },
     "140-codo": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_CoSoDoDac_DiemDoDacQuocGia.geojson"
+      "data": "data/KDC_BinhHoaNam_140_CoSoDoDac_DiemDoDacQuocGia.geojson"
     },
     "140-diemdocao": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_DiaHinh_DiemDoCao.geojson"
+      "data": "data/KDC_BinhHoaNam_140_DiaHinh_DiemDoCao.geojson"
     },
     "140-mocranhKS": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_mocranhKS.geojson"
+      "data": "data/KDC_BinhHoaNam_140_mocranhKS.geojson"
     },
     "140-Bienbaogiaothong": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_Bienbaogiaothong.geojson"
+      "data": "data/KDC_BinhHoaNam_140_Bienbaogiaothong.geojson"
     },
     "140-ThuyVan_BoKeBoCap": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_ThuyVan_BoKeBoCap.geojson"
+      "data": "data/KDC_BinhHoaNam_140_ThuyVan_BoKeBoCap.geojson"
     },
     "140-DanCu_DuongDayTaiDien": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_DanCu_DuongDayTaiDien.geojson"
+      "data": "data/KDC_BinhHoaNam_140_DanCu_DuongDayTaiDien.geojson"
     },
     "140-DanCu_CotDien": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_DanCu_CotDien.geojson"
+      "data": "data/KDC_BinhHoaNam_140_DanCu_CotDien.geojson"
     },
     "140-hogathoatnuoc": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_hogathoatnuoc.geojson"
+      "data": "data/KDC_BinhHoaNam_140_hogathoatnuoc.geojson"
     },
     "140-PhuBeMat_CayLauNam": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_PhuBeMat_CayLauNam.geojson"
+      "data": "data/KDC_BinhHoaNam_140_PhuBeMat_CayLauNam.geojson"
     },
     "140-bonhoa": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_bonhoa.geojson"
+      "data": "data/KDC_BinhHoaNam_140_bonhoa.geojson"
     },
     "140-matnuoctinh": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_140_ThuyVan_MatNuocTinh.geojson"
+      "data": "data/KDC_BinhHoaNam_140_ThuyVan_MatNuocTinh.geojson"
     },
     "160-ranhKS": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_160_RanhKS.geojson"
+      "data": "data/KDC_BinhHoaNam_160_RanhKS.geojson"
     },
     "160-dancu": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_160_Nha_Vung.geojson"
+      "data": "data/KDC_BinhHoaNam_160_Nha_Vung.geojson"
     },
     "160-thuyvan": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_160_DuongBoNuoc.geojson"
+      "data": "data/KDC_BinhHoaNam_160_DuongBoNuoc.geojson"
     },
     "160-mepduong": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_160_MepDuong.geojson"
+      "data": "data/KDC_BinhHoaNam_160_MepDuong.geojson"
     },
     "160-binhdo": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_160_DuongBinhDo.geojson"
+      "data": "data/KDC_BinhHoaNam_160_DuongBinhDo.geojson"
     },
     "160-caydoclap": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_160_CayDocLap.geojson"
+      "data": "data/KDC_BinhHoaNam_160_CayDocLap.geojson"
     },
     "160-codo": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_160_DiemDoDacQuocGia.geojson"
+      "data": "data/KDC_BinhHoaNam_160_DiemDoDacQuocGia.geojson"
     },
     "160-diemdocao": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_160_DiemDoCao.geojson"
+      "data": "data/KDC_BinhHoaNam_160_DiemDoCao.geojson"
     },
     "160-matnuoctinh": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_160_MatNuocTinh.geojson"
+      "data": "data/KDC_BinhHoaNam_160_MatNuocTinh.geojson"
     },
     "166-ranhKS": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_166_ranhKS.geojson"
+      "data": "data/KDC_BinhHoaNam_166_ranhKS.geojson"
     },
     "166-dancu": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_166_DanCu_Nha_Vung.geojson"
+      "data": "data/KDC_BinhHoaNam_166_DanCu_Nha_Vung.geojson"
     },
     "166-thuyvan": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_166_ThuyVan_DuongBoNuoc.geojson"
+      "data": "data/KDC_BinhHoaNam_166_ThuyVan_DuongBoNuoc.geojson"
     },
     "166-mepduong": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_166_GiaoThong_MepDuong.geojson"
+      "data": "data/KDC_BinhHoaNam_166_GiaoThong_MepDuong.geojson"
     },
     "166-cau": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_166_GiaoThong_CauGiaoThong_Duong.geojson"
+      "data": "data/KDC_BinhHoaNam_166_GiaoThong_CauGiaoThong_Duong.geojson"
     },
     "166-binhdo": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_166_DiaHinh_DuongBinhDo.geojson"
+      "data": "data/KDC_BinhHoaNam_166_DiaHinh_DuongBinhDo.geojson"
     },
     "166-caydoclap": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_166_PhuBeMat_CayDocLap.geojson"
+      "data": "data/KDC_BinhHoaNam_166_PhuBeMat_CayDocLap.geojson"
     },
     "166-codo": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_166_CoSoDoDac_DiemDoDacQuocGia.geojson"
+      "data": "data/KDC_BinhHoaNam_166_CoSoDoDac_DiemDoDacQuocGia.geojson"
     },
     "166-diemdocao": {
       "type": "geojson",
-      "data": "KDC_BinhHoaNam/data/KDC_BinhHoaNam_166_DiaHinh_DiemDoCao.geojson"
+      "data": "data/KDC_BinhHoaNam_166_DiaHinh_DiemDoCao.geojson"
     }
   },
   "layers": [
