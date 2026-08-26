@@ -202,7 +202,22 @@ function leafletHardSync() {
   const z = map.getZoom();
   const pane = leafletBase.getPanes() && leafletBase.getPanes().mapPane;
   if (pane) pane.style.transform = '';
-  leafletBase.setView([c.lat, c.lng], z, { animate: false, duration: 0, noMoveStart: true });
+  // QUAN TRONG: dung _resetView() (private API cua Leaflet), KHONG dung setView()
+  // cong khai. Leaflet's setView() co "fast path": neu center/zoom truyen vao
+  // giong voi gia tri dang luu (_lastCenter/_zoom), no bo qua toan bo buoc tinh
+  // lai _pixelOrigin va coi nhu khong co gi thay doi. leafletBase duoc tao luc
+  // trang vua load, khi #leaflet-base con display:none (kich thuoc container=0),
+  // nen _pixelOrigin ban dau bi tinh sai (nhu the container rong=0). Neu nguoi
+  // dung chon basemap Google ma CHUA random keo/zoom map truoc do, center/zoom
+  // luc goi setView() lan dau trung khop voi gia tri da luu -> fast path kich
+  // hoat -> _pixelOrigin sai KHONG BAO GIO duoc sua -> tile hien dung 1/4 dien
+  // tich giua man hinh (da xac nhan bang test truc tiep tren site that qua
+  // console: leftMin/leftMax/topMin/topMax chi phu duoc ~1/2 chieu rong va cao
+  // that su cua vung nhin). Day la nguyen nhan that su cua hien tuong "troi",
+  // khong phai do do tre khi keo chuot nhu 2 lan sua truoc. _resetView() ep
+  // tinh lai vo dieu kien, khong co fast path, nen luon dung bat ke co pan
+  // truoc do hay khong.
+  leafletBase._resetView(L.latLng(c.lat, c.lng), z, true);
   leafletRefCenter = { lng: c.lng, lat: c.lat };
   leafletRefZoom = z;
 }
