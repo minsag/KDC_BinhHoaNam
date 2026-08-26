@@ -170,11 +170,54 @@ const googleTileLayer = L.tileLayer(
   { tileSize: 256, maxZoom: 20, attribution: '© Google' }
 );
 
-function syncLeafletBase() {
-  const c = map.getCenter();
-  leafletBase.setView([c.lat, c.lng], map.getZoom(), { animate: false });
+// --- dong bo Leaflet theo MapLibre, 2 tang: mem (transform CSS) + cung (setView that) ---
+// Goi setView() moi frame trong luc keo/zoom qua nang (Leaflet phai tinh lai layout,
+// tile list...) nen bi tre so voi canvas WebGL cua MapLibre -> cam giac nen anh
+// "troi/lech" so voi lop vector ben tren trong luc di chuyen. Cach xu ly: trong luc
+// dang keo/zoom (su kien 'move', ban ve moi animation frame) CHI ap transform CSS
+// (translate + scale) len pane cua Leaflet - thao tac GPU re, khop tuc thi voi
+// MapLibre. Khi dung han (su kien 'moveend') moi goi setView() that de Leaflet nap
+// dung tile cho vi tri/zoom moi va reset transform ve identity. Khong can tinh
+// bearing/rotate vi da tat dragRotate tren MapLibre (ban do 2D, khong xoay).
+function projectPixel(lng, lat, zoom) {
+  const scale = 256 * Math.pow(2, zoom);
+  const sinLat = Math.sin(lat * Math.PI / 180);
+  const x = (lng + 180) / 360 * scale;
+  const y = (0.5 - Math.log((1 + sinLat) / (1 - sinLat)) / (4 * Math.PI)) * scale;
+  return { x, y };
 }
-map.on('move', syncLeafletBase);
+
+let leafletRefCenter = null;
+let leafletRefZoom = null;
+let leafletSyncActive = false;
+
+function leafletHardSync() {
+  const c = map.getCenter();
+  const z = map.getZoom();
+  const pane = leafletBase.getPanes() && leafletBase.getPanes().mapPane;
+  if (pane) pane.style.transform = '';
+  leafletBase.setView([c.lat, c.lng], z, { animate: false, duration: 0, noMoveStart: true });
+  leafletRefCenter = { lng: c.lng, lat: c.lat };
+  leafletRefZoom = z;
+}
+
+function leafletSoftSync() {
+  if (!leafletSyncActive || leafletRefCenter == null) return;
+  const pane = leafletBase.getPanes() && leafletBase.getPanes().mapPane;
+  if (!pane) return;
+  const c = map.getCenter();
+  const z = map.getZoom();
+  const s = Math.pow(2, z - leafletRefZoom);
+  const p0 = projectPixel(leafletRefCenter.lng, leafletRefCenter.lat, leafletRefZoom);
+  const p1 = projectPixel(c.lng, c.lat, leafletRefZoom);
+  const tx = p0.x - s * p1.x;
+  const ty = p0.y - s * p1.y;
+  pane.style.transformOrigin = '0 0';
+  pane.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${s})`;
+}
+
+map.on('move', leafletSoftSync);
+map.on('moveend', leafletHardSync);
 map.on('resize', () => leafletBase.invalidateSize());
 
 map.on('load', () => {
@@ -215,10 +258,11 @@ map.on('load', () => {
         googleAttribEl.style.display = 'block';
         if (!leafletBase.hasLayer(googleTileLayer)) googleTileLayer.addTo(leafletBase);
         map.setPaintProperty('background', 'background-opacity', 0);
-        syncLeafletBase();
-        // container vua duoc display:block, Leaflet can tinh lai kich thuoc
-        setTimeout(() => leafletBase.invalidateSize(), 0);
+        leafletSyncActive = true;
+        // container vua duoc display:block, Leaflet can tinh lai kich thuoc truoc khi setView
+        setTimeout(() => { leafletBase.invalidateSize(); leafletHardSync(); }, 0);
       } else {
+        leafletSyncActive = false;
         leafletBaseEl.style.display = 'none';
         googleAttribEl.style.display = 'none';
         map.setPaintProperty('background', 'background-opacity', 1);
